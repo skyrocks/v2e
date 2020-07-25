@@ -29,6 +29,11 @@
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
   },
+  "babel": {
+    "presets": [
+      "@vue/cli-plugin-babel/preset"
+    ]
+  },
   "eslintConfig": {
     "root": true,
     "env": {
@@ -42,7 +47,21 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-console": "off"
+    }
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "singleQuote": true,
+    "semi": false,
+    "printWidth": 100,
+    "htmlWhitespaceSensitivity": "ignore"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
   },
   "browserslist": [
     "> 1%",
