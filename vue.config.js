@@ -1,81 +1,114 @@
-// console.log('project: ' + process.env.VUE_APP_PROJECT)
+'use strict'
+const path = require('path')
+const defaultSettings = require('./src/settings.js')
 
-const timestamp = new Date().getTime()
-// const CopyWebpackPlugin = require('copy-webpack-plugin')
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
 
+const name = defaultSettings.title || 'Project Title' // page title
+
+// All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-  publicPath: process.env.VUE_APP_URL, // 公共路径
-  outputDir: process.env.VUE_APP_DIR, // 不同的环境打不同包名
-  lintOnSave: true,
-  productionSourceMap: process.env.NODE_ENV === 'production' ? false : true, // 生产环境下打包不产生map文件
+  /**
+   * You will need to set publicPath if you plan to deploy your site under a sub path,
+   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
+   * then publicPath should be set to "/bar/".
+   * In most cases please use '/' !!!
+   * Detail: https://cli.vuejs.org/config/#publicpath
+   */
+  publicPath: '/',
+  outputDir: 'dist',
   assetsDir: 'static',
-  css: {
-    sourceMap: process.env.NODE_ENV === 'production' ? false : true, // 生产环境下打包不产生map文件
-    loaderOptions: {
-      sass: {
-        prependData: `@import "@/assets/style/variables.scss";@import "@/assets/style/global.scss";`
-      }
-    }
-  },
+  lintOnSave: process.env.NODE_ENV === 'development',
+  productionSourceMap: false,
 
-  chainWebpack: config => {
-    config.module
-      .rule('images')
-      .test(/\.(jpg|png|gif|jpeg)$/)
-      .use('url-loader')
-      .loader('url-loader')
-      .tap(options => {
-        //将图片文件名的hash方式改成时间戳, 这样在CopyWebpackPlugin中替换不同项目图片时可以直接覆盖
-        options.fallback.options.name = `static/img/[name].${timestamp}.[ext]`
-        return options
-      })
-      .end()
-  },
-
-  //webpack配置
-  configureWebpack: {
-    // plugins: [
-    //   new CopyWebpackPlugin([
-    //     {
-    //       from: `project/${process.env.VUE_APP_PROJECT}/assets/img`,
-    //       to: `static/img/[name].${timestamp}.[ext]`,
-    //       force: true
-    //     }
-    //   ])
-    // ],
-
-    //关闭 webpack 的性能提示
-    performance: {
-      hints: false
-    }
-    //或者
-    //警告 webpack 的性能提示
-    // performance: {
-    //   hints:'warning',
-    //   //入口起点的最大体积
-    //   maxEntrypointSize: 50000000,
-    //   //生成文件的最大体积
-    //   maxAssetSize: 30000000,
-    //   //只给出 js 文件的性能提示
-    //   assetFilter: function(assetFilename) {
-    //     return assetFilename.endsWith('.js');
-    //   }
-    // }
-  },
-
-  // 开发环境配置代理服务，实现跨域
   devServer: {
     port: 8080,
-    open: false,
-    https: false,
-    proxy: {
-      '/api': {
-        target: process.env.VUE_APP_BASE_API,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
+    open: true,
+    overlay: {
+      warnings: false,
+      errors: true
+    }
+  },
+  configureWebpack: {
+    // provide the app's title in webpack's name field, so that
+    // it can be accessed in index.html to inject the correct title.
+    name: name,
+    resolve: {
+      alias: {
+        '@': resolve('src')
       }
     }
+  },
+  chainWebpack(config) {
+    // it can improve the speed of the first screen, it is recommended to turn on preload
+    config.plugin('preload').tap(() => [
+      {
+        rel: 'preload',
+        // to ignore runtime.js
+        // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
+        fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
+        include: 'initial'
+      }
+    ])
+
+    // when there are many pages, it will cause too many meaningless requests
+    config.plugins.delete('prefetch')
+
+    // set svg-sprite-loader
+    // config.module
+    //   .rule('svg')
+    //   .exclude.add(resolve('src/icons'))
+    //   .end()
+    // config.module
+    //   .rule('icons')
+    //   .test(/\.svg$/)
+    //   .include.add(resolve('src/icons'))
+    //   .end()
+    //   .use('svg-sprite-loader')
+    //   .loader('svg-sprite-loader')
+    //   .options({
+    //     symbolId: 'icon-[name]'
+    //   })
+    //   .end()
+
+    config.when(process.env.NODE_ENV !== 'development', config => {
+      config
+        .plugin('ScriptExtHtmlWebpackPlugin')
+        .after('html')
+        .use('script-ext-html-webpack-plugin', [
+          {
+            // `runtime` must same as runtimeChunk name. default is `runtime`
+            inline: /runtime\..*\.js$/
+          }
+        ])
+        .end()
+      config.optimization.splitChunks({
+        chunks: 'all',
+        cacheGroups: {
+          libs: {
+            name: 'chunk-libs',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            chunks: 'initial' // only package third parties that are initially dependent
+          },
+          elementUI: {
+            name: 'chunk-elementUI', // split elementUI into a single package
+            priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+            test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
+          },
+          commons: {
+            name: 'chunk-commons',
+            test: resolve('src/components'), // can customize your rules
+            minChunks: 3, //  minimum common number
+            priority: 5,
+            reuseExistingChunk: true
+          }
+        }
+      })
+      // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
+      config.optimization.runtimeChunk('single')
+    })
   }
 }
