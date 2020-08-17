@@ -47,6 +47,18 @@
         </span>
       </el-form-item>
 
+      <div class="verifyCode-wrap">
+        <div>验证码:</div>
+        <el-input v-model="inputVerifyCode" placeholder="请输入验证码"></el-input>
+        <el-image
+          style="width: 80px; height: 28px;"
+          :src="verifyCodeUrl"
+          :fit="fit"
+          @click="refreshVerifyCode"
+        ></el-image>
+        <div @click="refreshVerifyCode">点击刷新</div>
+      </div>
+
       <el-button
         :loading="loading"
         type="primary"
@@ -61,17 +73,38 @@
         <span>password: any</span>
       </div>
     </el-form>
+
+
+    <el-input v-model="inputCellphone" placeholder="手机号"></el-input>
+    <el-input v-model="inputSMSCode" placeholder="短信验证码"></el-input>
+    <el-button
+      :loading="loading"
+      type="primary"
+      style="margin-bottom:30px;"
+      @click.native.prevent="sendCode"
+    >
+      点击获取验证码
+    </el-button>
+    <el-button
+      :loading="loading"
+      type="primary"
+      style="width:100%;margin-bottom:30px;"
+      @click.native.prevent="handleLoginSMS"
+    >
+      短信登录
+    </el-button>
   </div>
 </template>
 
 <script>
-import { validLoginName } from '@/utils/validate'
+import uuidv1 from 'uuid/v1'
+import { sendCode } from '@/api/user'
 
 export default {
   name: 'Login',
   data() {
     const validateLoginName = (rule, value, callback) => {
-      if (!validLoginName(value)) {
+      if (!this.validLoginName(value)) {
         callback(new Error('Please enter the correct user name'))
       } else {
         callback()
@@ -84,7 +117,18 @@ export default {
         callback()
       }
     }
+
     return {
+
+      inputSMSId: '',
+      inputCellphone: '',
+      inputSMSCode: '',
+
+      //图片验证码的请求地址
+      verifyCodeId: '',
+      verifyCodeUrl: '',
+      inputVerifyCode: '',
+
       loginForm: {
         loginName: 'devtest',
         password: '1'
@@ -106,6 +150,9 @@ export default {
       immediate: true
     }
   },
+  mounted() {
+    this.refreshVerifyCode()
+  },
   methods: {
     showPwd() {
       if (this.passwordType === 'password') {
@@ -118,12 +165,16 @@ export default {
       })
     },
     handleLogin() {
-      console.log('handleLogin')
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          const data = Object.assign(this.loginForm, {
+            captcha: this.inputVerifyCode,
+            captchaId: this.verifyCodeId
+          })
+          console.log(data)
           this.$store
-            .dispatch('user/login', this.loginForm)
+            .dispatch('user/login', data)
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
@@ -137,9 +188,36 @@ export default {
         }
       })
     },
-    validLoginName(str) {
-      const valid_map = ['devtest', 'admin', 'editor']
-      return valid_map.indexOf(str.trim()) >= 0
+    validLoginName() {
+      //const valid_map = ['devtest', 'admin', 'editor']
+      //return valid_map.indexOf(str.trim()) >= 0
+      return true
+    },
+
+    refreshVerifyCode() {
+      this.verifyCodeId = uuidv1()
+      this.verifyCodeUrl = `${process.env.VUE_APP_BASE_API}/api/auth/captcha/${this.verifyCodeId}`
+    },
+
+    sendCode() {
+      this.inputSMSId = uuidv1()
+      const data = { id: this.inputSMSId, cellphone: this.inputCellphone }
+      sendCode(data).then(response => {
+        console.log(response.data)
+      })
+    },
+
+    handleLoginSMS() {
+      const data = { id: this.inputSMSId, cellphone: this.inputCellphone, code: this.inputSMSCode }
+      this.$store
+        .dispatch('user/loginSMS', data)
+        .then(() => {
+          this.$router.push({ path: this.redirect || '/' })
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     }
   }
 }
@@ -252,6 +330,14 @@ $light_gray: #eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .verifyCode-wrap {
+    cursor: pointer;
+    div {
+      display: inline-block;
+      color: white;
+    }
   }
 }
 </style>

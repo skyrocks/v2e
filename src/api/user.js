@@ -21,3 +21,19 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function sendCode(data) {
+  return request({
+    url: '/api/auth/sms/code',
+    method: 'post',
+    data
+  })
+}
+
+export function loginSMS(data) {
+  return request({
+    url: '/api/auth/sms/login',
+    method: 'post',
+    data
+  })
+}

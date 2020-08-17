@@ -6,19 +6,12 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'Project Title' // page title
+const name = defaultSettings.title || 'Project Title'
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-  /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
-   * Detail: https://cli.vuejs.org/config/#publicpath
-   */
-  publicPath: '/',
-  outputDir: 'dist',
+  publicPath: process.env.VUE_PATH_URL,
+  outputDir: process.env.VUE_OUTPUT_DIR,
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
@@ -91,23 +84,25 @@ module.exports = {
             name: 'chunk-libs',
             test: /[\\/]node_modules[\\/]/,
             priority: 10,
-            chunks: 'initial' // only package third parties that are initially dependent
+            chunks: 'initial' // 只打包初始时依赖的第三方
           },
           elementUI: {
-            name: 'chunk-elementUI', // split elementUI into a single package
-            priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+            name: 'chunk-elementUI', // 单独将 elementUI 拆包
+            priority: 20, // 权重要大于 libs 和 app 不然会被打包进 libs 或者 app
             test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
           },
           commons: {
             name: 'chunk-commons',
-            test: resolve('src/components'), // can customize your rules
-            minChunks: 3, //  minimum common number
+            test: resolve('src/components'), // 可自定义拓展你的规则
+            minChunks: 3, // 可自定义拓展你的规则
             priority: 5,
             reuseExistingChunk: true
           }
         }
       })
       // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
+      // true：表示每个入口都抽取一个公共的运行时代码
+      // single：表示多个入口抽取一个公共的运行时代码，一般使用这种方式
       config.optimization.runtimeChunk('single')
     })
   }
