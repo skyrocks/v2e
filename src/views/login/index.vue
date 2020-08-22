@@ -1,145 +1,131 @@
 <template>
-  <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">Login Form</h3>
-      </div>
-
-      <el-form-item prop="loginName">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="loginName"
-          v-model="loginForm.loginName"
-          placeholder="LoginName"
-          name="loginName"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="Password"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
-
-      <div class="verifyCode-wrap">
-        <div>验证码:</div>
-        <el-input v-model="inputVerifyCode" placeholder="请输入验证码"></el-input>
-        <el-image
-          style="width: 80px; height: 28px;"
-          :src="verifyCodeUrl"
-          :fit="fit"
-          @click="refreshVerifyCode"
-        ></el-image>
-        <div @click="refreshVerifyCode">点击刷新</div>
-      </div>
-
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >
-        Login
-      </el-button>
-
-      <div class="tips">
-        <span style="margin-right:20px;">loginName: admin</span>
-        <span>password: any</span>
-      </div>
-    </el-form>
-
-
-    <el-input v-model="inputCellphone" placeholder="手机号"></el-input>
-    <el-input v-model="inputSMSCode" placeholder="短信验证码"></el-input>
-    <el-button
-      :loading="loading"
-      type="primary"
-      style="margin-bottom:30px;"
-      @click.native.prevent="sendCode"
-    >
-      点击获取验证码
-    </el-button>
-    <el-button
-      :loading="loading"
-      type="primary"
-      style="width:100%;margin-bottom:30px;"
-      @click.native.prevent="handleLoginSMS"
-    >
-      短信登录
-    </el-button>
+  <div class="bg">
+    <el-row>
+      <el-col :span="6" :offset="14">
+        <div class="login-container">
+          <div class="login-type-container">
+            <el-button type="text" @click.native.prevent="loginType = 0">
+              <span :class="`login-type ${loginType === 0 ? 'active' : ''}`">密码登录</span>
+            </el-button>
+            <el-button type="text" @click.native.prevent="loginType = 1">
+              <span :class="`login-type ${loginType === 1 ? 'active' : ''}`">短信登录</span>
+            </el-button>
+          </div>
+          <div class="login-pwd-container" v-show="loginType === 0">
+            <el-form>
+              <el-form-item>
+                <el-input placeholder="请输入账号" v-model="form.pwd.loginName">
+                  <template slot="prepend"><i class="el-icon-user icon-style"></i></template>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-input
+                  placeholder="请输入密码"
+                  show-password
+                  v-model="form.pwd.password"
+                  @keyup.enter.native="onPwdLogin"
+                >
+                  <template slot="prepend"><i class="el-icon-lock icon-style"></i></template>
+                </el-input>
+              </el-form-item>
+              <transition name="el-zoom-in-top">
+                <el-form-item v-show="showCaptcha">
+                  <el-input
+                    placeholder="请输入图片验证码"
+                    v-model="form.pwd.captcha"
+                    style="width:65%;"
+                    @keyup.enter.native="onPwdLogin"
+                  >
+                    <template slot="prepend">
+                      <i class="el-icon-c-scale-to-original icon-style"></i>
+                    </template>
+                  </el-input>
+                  <div style="width:35%; display:inline-block;">
+                    <el-tooltip effect="dark" content="点击刷新" placement="right" :open-delay="500">
+                      <el-image
+                        class="captcha-img"
+                        :src="captchaUrl"
+                        @click.native.prevent="onRefreshCaptcha"
+                      ></el-image>
+                    </el-tooltip>
+                  </div>
+                </el-form-item>
+              </transition>
+              <el-form-item>
+                <el-button type="success" :loading="loading" style="width: 100%" @click.native.prevent="onPwdLogin">
+                  <span class="submit-text">登录</span>
+                </el-button>
+              </el-form-item>
+            </el-form>
+            <div class="tbar">
+              <el-button type="text"><span class="forget-pwd">忘记密码</span></el-button>
+            </div>
+          </div>
+          <div class="login-sms-container" v-show="loginType === 1">
+            <el-form>
+              <el-form-item>
+                <el-input placeholder="请输入手机号码" v-model="form.sms.cellphone">
+                  <template slot="prepend">
+                    <i class="el-icon-mobile-phone icon-style"></i>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-input placeholder="请输入短信验证码" v-model="form.sms.smsCode" @keyup.enter.native="onSmsLogin">
+                  <template slot="prepend">
+                    <i class="el-icon-c-scale-to-original icon-style"></i>
+                  </template>
+                  <template slot="suffix">
+                    <el-button type="text" @click.native.prevent="onSendSmsCode" :disabled="waiting">
+                      <span :class="`get-smsCode ${waiting ? 'waiting' : ''}`">
+                        {{ waiting ? waitText : '发送验证码' }}
+                      </span>
+                    </el-button>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="success" :loading="loading" style="width: 100%" @click.native.prevent="onSmsLogin">
+                  <span class="submit-text">登录</span>
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
-
 <script>
 import uuidv1 from 'uuid/v1'
-import { sendCode } from '@/api/user'
+import { sendSmsCode, loginError } from '@/api/user'
 
 export default {
   name: 'Login',
   data() {
-    const validateLoginName = (rule, value, callback) => {
-      if (!this.validLoginName(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 0) {
-        callback(new Error('The password can not be less than 1 digits'))
-      } else {
-        callback()
-      }
-    }
-
     return {
-
-      inputSMSId: '',
-      inputCellphone: '',
-      inputSMSCode: '',
-
-      //图片验证码的请求地址
-      verifyCodeId: '',
-      verifyCodeUrl: '',
-      inputVerifyCode: '',
-
-      loginForm: {
-        loginName: 'devtest',
-        password: '1'
+      loginType: 0, //0:pwd, 1:sms
+      showCaptcha: false, //默认不显示图片验证码,登录错误的时候再显示
+      captchaUrl: '', //验证码图片的地址
+      form: {
+        pwd: {
+          loginName: '',
+          password: '',
+          captcha: '',
+          captchaId: ''
+        },
+        sms: {
+          cellphone: '',
+          smsCode: '',
+          smsCodeId: ''
+        }
       },
-      loginRules: {
-        loginName: [{ required: true, trigger: 'blur', validator: validateLoginName }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
-      loading: false,
-      passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      loading: false, //登录等待标志
+      waiting: false, //发送验证码后的等待标志
+      intervalId: null, //发送验证码后的计时器Id
+      waitText: '',
+      lastTime: 60
     }
   },
   watch: {
@@ -151,192 +137,192 @@ export default {
     }
   },
   mounted() {
-    this.refreshVerifyCode()
+    this.loadLoginError()
+    this.onRefreshCaptcha()
   },
   methods: {
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
+    loadLoginError() {
+      loginError().then(response => {
+        this.showCaptcha = response.data
       })
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          const data = Object.assign(this.loginForm, {
-            captcha: this.inputVerifyCode,
-            captchaId: this.verifyCodeId
+    onRefreshCaptcha() {
+      this.form.pwd.captchaId = uuidv1()
+      this.captchaUrl = `${process.env.VUE_APP_BASE_API}/api/auth/captcha/${this.form.pwd.captchaId}`
+    },
+    onPwdLogin() {
+      if (this.verifyPwdLogin()) {
+        this.loading = true
+        this.$store
+          .dispatch('user/login', this.form.pwd)
+          .then(() => {
+            this.showCaptcha = false
+            this.$router.push({ path: this.redirect || '/' })
           })
-          console.log(data)
-          this.$store
-            .dispatch('user/login', data)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/' })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
+          .catch(() => {
+            this.showCaptcha = true
+            this.loading = false
+          })
+      }
+    },
+    onSmsLogin() {
+      if (this.verifySmsLogin()) {
+        this.loading = true
+        const data = { id: this.form.sms.smsCodeId, code: this.form.sms.smsCode, cellphone: this.form.sms.cellphone }
+        this.$store
+          .dispatch('user/loginSms', data)
+          .then(() => {
+            this.showCaptcha = false
+            this.$router.push({ path: this.redirect || '/' })
+          })
+          .catch(() => {
+            this.loading = false
+          })
+      }
+    },
+    onSendSmsCode() {
+      if (this.verifySmsSendCode()) {
+        this.form.sms.smsCodeId = uuidv1()
+        const data = { id: this.form.sms.smsCodeId, cellphone: this.form.sms.cellphone }
+        sendSmsCode(data).then(response => {
+          console.log(response.data)
+        })
+        this.wait()
+      }
+    },
+    wait() {
+      this.waiting = true
+      this.waitText = '60s后获取'
+      this.intervalId = setInterval(() => {
+        this.lastTime--
+        this.waitText = `${this.lastTime}s后获取`
+        if (this.lastTime <= 0) {
+          clearInterval(this.intervalId) //清除计时器
+          this.intervalId = null //设置为null
+          this.lastTime = 60
+          this.waiting = false
+        }
+      }, 1000)
+    },
+    verifyPwdLogin() {
+      this.form.pwd.loginName = this.form.pwd.loginName.trim()
+      this.form.pwd.captcha = this.form.pwd.captcha.trim()
+      if (this.form.pwd.loginName === '') {
+        this.$message({
+          message: '请填写登录账号',
+          type: 'warning'
+        })
+        return false
+      }
+      if (this.form.pwd.password === '') {
+        this.$message({
+          message: '请填写登录密码',
+          type: 'warning'
+        })
+        return false
+      }
+      if (this.showCaptcha) {
+        this.form.pwd.captcha = this.form.pwd.captcha.trim()
+        if (this.form.pwd.captcha === '') {
+          this.$message({
+            message: '请填写图片验证码',
+            type: 'warning'
+          })
           return false
         }
-      })
-    },
-    validLoginName() {
-      //const valid_map = ['devtest', 'admin', 'editor']
-      //return valid_map.indexOf(str.trim()) >= 0
+      }
       return true
     },
-
-    refreshVerifyCode() {
-      this.verifyCodeId = uuidv1()
-      this.verifyCodeUrl = `${process.env.VUE_APP_BASE_API}/api/auth/captcha/${this.verifyCodeId}`
-    },
-
-    sendCode() {
-      this.inputSMSId = uuidv1()
-      const data = { id: this.inputSMSId, cellphone: this.inputCellphone }
-      sendCode(data).then(response => {
-        console.log(response.data)
-      })
-    },
-
-    handleLoginSMS() {
-      const data = { id: this.inputSMSId, cellphone: this.inputCellphone, code: this.inputSMSCode }
-      this.$store
-        .dispatch('user/loginSMS', data)
-        .then(() => {
-          this.$router.push({ path: this.redirect || '/' })
-          this.loading = false
+    verifySmsLogin() {
+      this.form.sms.cellphone = this.form.sms.cellphone.trim()
+      this.form.sms.smsCode = this.form.sms.smsCode.trim()
+      if (this.form.sms.cellphone === '') {
+        this.$message({
+          message: '请填写手机号码',
+          type: 'warning'
         })
-        .catch(() => {
-          this.loading = false
+        return false
+      }
+      if (this.form.sms.smsCode === '') {
+        this.$message({
+          message: '请填写短信验证码',
+          type: 'warning'
         })
+        return false
+      }
+      return true
+    },
+    verifySmsSendCode() {
+      this.form.sms.cellphone = this.form.sms.cellphone.trim()
+      if (this.form.sms.cellphone === '') {
+        this.$message({
+          message: '请填写手机号码',
+          type: 'warning'
+        })
+        return false
+      } else {
+        return true
+      }
     }
   }
 }
 </script>
-
-<style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
-.login-container {
+.bg {
   min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
+  background-image: url('../../assets/login_images/bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.login-container {
+  background-color: #ffffff66;
+  border-radius: 1rem;
+  height: 42rem;
+  margin-top: 40%;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.6);
+  padding: 1.5rem;
+  .login-type-container {
+    padding: 1.5rem;
+    .login-type {
+      font-size: 1.6rem;
+      color: $color-font-primary;
+      opacity: 0.7;
+      &.active {
+        border-bottom: 1px solid #333;
+        padding-bottom: 1rem;
+        font-weight: bold;
+        opacity: 1;
       }
     }
   }
 
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
+  .login-pwd-container,
+  .login-sms-container {
+    padding: 1.5rem;
+    .captcha-img {
+      padding: 2px 1px 2px 10px;
+      width: 100%;
+      height: 40px;
+      cursor: pointer;
     }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .verifyCode-wrap {
-    cursor: pointer;
-    div {
-      display: inline-block;
-      color: white;
+    .get-smsCode {
+      padding-right: 1rem;
+      &.waiting {
+        color: $color-font-grey;
+      }
+    }
+    .icon-style {
+      font-size: 2rem;
+    }
+    .submit-text {
+      font-size: 2rem;
+      letter-spacing: 0.5rem;
+    }
+    .tbar {
+      text-align: right;
+      .forget-pwd {
+        color: $color-font-primary;
+      }
     }
   }
 }

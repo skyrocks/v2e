@@ -1,10 +1,6 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div
-      v-if="device === 'mobile' && sidebar.opened"
-      class="drawer-bg"
-      @click="handleClickOutside"
-    />
+    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
@@ -56,7 +52,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@/styles/mixin.scss';
-@import '~@/styles/variables.scss';
+@import '~@/styles/sidebar-variables.scss';
 
 .app-wrapper {
   @include clearfix;

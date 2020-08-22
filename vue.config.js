@@ -15,7 +15,14 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-
+  css: {
+    sourceMap: false,
+    loaderOptions: {
+      sass: {
+        prependData: `@import "~@/styles/variables.scss";`
+      }
+    }
+  },
   devServer: {
     port: 8080,
     open: true,

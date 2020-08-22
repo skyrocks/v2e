@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function findMyMenu() {
+export function findAuthMenu() {
   return request({
-    url: '/api/menu/myMenu',
+    url: '/api/menu/findAuthMenu',
     method: 'get'
   })
 }

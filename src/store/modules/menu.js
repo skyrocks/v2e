@@ -1,4 +1,4 @@
-import { findMyMenu } from '@/api/menu'
+import { findAuthMenu } from '@/api/menu'
 
 const getDefaultState = () => {
   return {
@@ -15,9 +15,9 @@ const mutations = {
 }
 
 const actions = {
-  findMyMenu({ commit }) {
+  findAuthMenu({ commit }) {
     return new Promise((resolve, reject) => {
-      findMyMenu()
+      findAuthMenu()
         .then(response => {
           const { data } = response
           commit('SET_MENUS', data)

@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'rock_tiger_token'
+const TokenKey = 'aolong_parrot_token'
 
 export function getToken() {
   return Cookies.get(TokenKey)

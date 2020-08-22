@@ -1,5 +1,5 @@
 {
-  "name": "rock-tiger",
+  "name": "aolong-parrot",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -76,7 +76,7 @@
     "tabWidth": 2,
     "singleQuote": true,
     "semi": false,
-    "printWidth": 100,
+    "printWidth": 120,
     "htmlWhitespaceSensitivity": "ignore"
   },
   "postcss": {
