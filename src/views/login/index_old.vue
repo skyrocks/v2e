@@ -74,15 +74,9 @@
       </div>
     </el-form>
 
-
     <el-input v-model="inputCellphone" placeholder="手机号"></el-input>
     <el-input v-model="inputSMSCode" placeholder="短信验证码"></el-input>
-    <el-button
-      :loading="loading"
-      type="primary"
-      style="margin-bottom:30px;"
-      @click.native.prevent="sendCode"
-    >
+    <el-button :loading="loading" type="primary" style="margin-bottom:30px;" @click.native.prevent="sendCode">
       点击获取验证码
     </el-button>
     <el-button
