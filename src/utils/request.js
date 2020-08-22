@@ -8,7 +8,7 @@ const getAuthorization = () => {
 }
 
 const againRequest = async response => {
-  await store.dispatch('user/refreshToken', getAuthorization())
+  await store.dispatch('auth/refreshToken', getAuthorization())
   let config = response.config
   config.headers['Authorization'] = getAuthorization()
   const resp = await axios.request(config)

@@ -98,7 +98,7 @@
 
 <script>
 import uuidv1 from 'uuid/v1'
-import { sendCode } from '@/api/user'
+import { sendCode } from '@/api/auth'
 
 export default {
   name: 'Login',
@@ -172,7 +172,7 @@ export default {
             captchaId: this.verifyCodeId
           })
           this.$store
-            .dispatch('user/login', data)
+            .dispatch('auth/login', data)
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
@@ -207,7 +207,7 @@ export default {
     handleLoginSMS() {
       const data = { id: this.inputSMSId, cellphone: this.inputCellphone, code: this.inputSMSCode }
       this.$store
-        .dispatch('user/loginSMS', data)
+        .dispatch('auth/loginSMS', data)
         .then(() => {
           this.$router.push({ path: this.redirect || '/' })
           this.loading = false

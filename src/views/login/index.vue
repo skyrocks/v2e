@@ -98,7 +98,7 @@
 </template>
 <script>
 import uuidv1 from 'uuid/v1'
-import { sendSmsCode, loginError } from '@/api/user'
+import { sendSmsCode, loginError } from '@/api/auth'
 
 export default {
   name: 'Login',
@@ -154,7 +154,7 @@ export default {
       if (this.verifyPwdLogin()) {
         this.loading = true
         this.$store
-          .dispatch('user/login', this.form.pwd)
+          .dispatch('auth/login', this.form.pwd)
           .then(() => {
             this.showCaptcha = false
             this.$router.push({ path: this.redirect || '/' })
@@ -170,7 +170,7 @@ export default {
         this.loading = true
         const data = { id: this.form.sms.smsCodeId, code: this.form.sms.smsCode, cellphone: this.form.sms.cellphone }
         this.$store
-          .dispatch('user/loginSms', data)
+          .dispatch('auth/loginSms', data)
           .then(() => {
             this.showCaptcha = false
             this.$router.push({ path: this.redirect || '/' })

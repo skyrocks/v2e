@@ -31,14 +31,14 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
-          await store.dispatch('user/getInfo')
+          await store.dispatch('auth/profile')
           await store.dispatch('menu/findAuthMenu')
 
           createDynamicRouter()
 
           next()
         } catch (error) {
-          await store.dispatch('user/resetToken')
+          await store.dispatch('auth/resetToken')
           //Message.error(error.message || '请重新登录')
           next(`/login?redirect=${to.path}`)
           NProgress.done()

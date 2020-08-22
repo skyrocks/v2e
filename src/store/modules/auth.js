@@ -1,4 +1,4 @@
-import { login, loginSms, refreshToken, getInfo } from '@/api/user'
+import { login, loginSms, refreshToken, profile } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/token'
 import { resetRouter } from '@/router'
 
@@ -60,9 +60,24 @@ const actions = {
     })
   },
 
-  getInfo({ commit }) {
+  refreshToken({ commit }, token) {
     return new Promise((resolve, reject) => {
-      getInfo()
+      refreshToken({ token })
+        .then(response => {
+          const { data } = response
+          commit('SET_TOKEN', data)
+          setToken(data)
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+
+  profile({ commit }) {
+    return new Promise((resolve, reject) => {
+      profile()
         .then(response => {
           console.log(`get info ${response}`)
           const { data } = response
@@ -91,21 +106,6 @@ const actions = {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()
-    })
-  },
-
-  refreshToken({ commit }, token) {
-    return new Promise((resolve, reject) => {
-      refreshToken({ token })
-        .then(response => {
-          const { data } = response
-          commit('SET_TOKEN', data)
-          setToken(data)
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
     })
   }
 }
