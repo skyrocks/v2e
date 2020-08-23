@@ -98,6 +98,7 @@
 </template>
 <script>
 import uuidv1 from 'uuid/v1'
+import { createDynamicRouter } from '@/router/menu'
 import { sendSmsCode, loginError } from '@/api/auth'
 
 export default {
@@ -157,7 +158,7 @@ export default {
           .dispatch('auth/login', this.form.pwd)
           .then(() => {
             this.showCaptcha = false
-            this.$router.push({ path: this.redirect || '/' })
+            this.enter()
           })
           .catch(() => {
             this.showCaptcha = true
@@ -173,7 +174,7 @@ export default {
           .dispatch('auth/loginSms', data)
           .then(() => {
             this.showCaptcha = false
-            this.$router.push({ path: this.redirect || '/' })
+            this.enter()
           })
           .catch(() => {
             this.loading = false
@@ -189,6 +190,15 @@ export default {
         })
         this.wait()
       }
+    },
+    async enter() {
+      // 这里不直接路由跳转/, 而是先获取登录信息及创建路由,
+      // 首次登录完全依赖路由守卫中的判断逻辑, 直接跳转/的话,会导致多次路由中断,出现不友好的错误信息,
+      // 当然那也不影响登录使用
+      await this.$store.dispatch('auth/profile')
+      await this.$store.dispatch('menu/findAuthMenu')
+      createDynamicRouter()
+      this.$router.push({ path: this.redirect || '/' })
     },
     wait() {
       this.waiting = true

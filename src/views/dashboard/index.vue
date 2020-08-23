@@ -27,7 +27,6 @@ export default {
   methods: {
     onRequestTest() {
       findAuthMenu().then(response => {
-        console.log(response)
         this.testMenu.push(response.success)
       })
     }

@@ -38,7 +38,6 @@ const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -64,6 +63,7 @@ const createRouter = () => {
     routes: constantRoutes
   })
 }
+
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465

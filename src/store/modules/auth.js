@@ -79,14 +79,12 @@ const actions = {
     return new Promise((resolve, reject) => {
       profile()
         .then(response => {
-          console.log(`get info ${response}`)
           const { data } = response
           commit('SET_NAME', data.userName)
           // todo commit('SET_AVATAR', avatar)
           resolve(data)
         })
         .catch(error => {
-          console.log(`get info ${JSON.stringify(error)}`)
           reject(error)
         })
     })
