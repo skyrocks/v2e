@@ -47,13 +47,18 @@ service.interceptors.response.use(
       } else {
         if (res.code === 401) {
           // 401: 认证错误
-          MessageBox.confirm('您已经登录超时, 您可以选择重新登录或者留在当前页面', '退出', {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '留在当前页面',
-            type: 'warning'
-          }).then(() => {
+          if (window.__V.route && window.__V.route.path === '/login') {
             location.reload()
-          })
+          } else {
+            MessageBox.confirm('您已经登录超时, 您可以选择重新登录或者留在当前页面', '退出', {
+              confirmButtonText: '重新登录',
+              cancelButtonText: '留在当前页面',
+              type: 'warning'
+            }).then(() => {
+              // 跳回登录
+              location.reload()
+            })
+          }
         } else if (res.code === 901) {
           // 901: 业务错误
           Message({

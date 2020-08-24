@@ -1,15 +1,13 @@
-import Cookies from 'js-cookie'
-
-const TokenKey = 'aolong_parrot_token'
+import Store from './store'
 
 export function getToken() {
-  return Cookies.get(TokenKey)
+  return Store.get(window.__C.K_TOKEN)
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  Store.set(window.__C.K_TOKEN, token)
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey)
+  Store.remove(window.__C.K_TOKEN)
 }

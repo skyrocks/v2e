@@ -15,7 +15,7 @@ const createDynamicRouter = () => {
           path: 'dashboard',
           name: 'Dashboard',
           component: () => import('@/views/dashboard/index'),
-          meta: { title: 'Dashboard', icon: 'wfapply' }
+          meta: { title: '工作台', icon: 'wfapply' }
         }
       ]
     }
@@ -40,7 +40,7 @@ const createMenuTree = data => {
           {
             path: 'index',
             name: ele.menuId,
-            component: () => import(`@/views/${ele.component}/index`),
+            component: () => import(`@/views/${ele.route}/index`),
             meta: { title: ele.menuName, icon: ele.parentId === '' ? ele.iconClass : '' }
           }
         ]

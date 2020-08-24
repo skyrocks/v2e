@@ -47,7 +47,7 @@ const constantRoutes = [
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
-        meta: { title: 'Dashboard', icon: 'wfapply' }
+        meta: { title: '工作台', icon: 'wfapply' }
       }
     ]
   }

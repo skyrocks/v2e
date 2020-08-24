@@ -1,8 +1,10 @@
-import Cookies from 'js-cookie'
+import Store from '@/utils/store'
+
+const key = window.__C.K_SIDEBARSTATUS
 
 const state = {
   sidebar: {
-    opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+    opened: Store.get(key) ? !!+Store.get(key) : true,
     withoutAnimation: false
   },
   device: 'desktop'
@@ -13,13 +15,13 @@ const mutations = {
     state.sidebar.opened = !state.sidebar.opened
     state.sidebar.withoutAnimation = false
     if (state.sidebar.opened) {
-      Cookies.set('sidebarStatus', 1)
+      Store.set(key, 1)
     } else {
-      Cookies.set('sidebarStatus', 0)
+      Store.set(key, 0)
     }
   },
   CLOSE_SIDEBAR: (state, withoutAnimation) => {
-    Cookies.set('sidebarStatus', 0)
+    Store.set(key, 0)
     state.sidebar.opened = false
     state.sidebar.withoutAnimation = withoutAnimation
   },

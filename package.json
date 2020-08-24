@@ -43,7 +43,7 @@
   "babel": {
     "presets": [
       "@vue/cli-plugin-babel/preset"
-    ],
+    ],    
     "env": {
       "development": {
         "plugins": [
@@ -56,7 +56,9 @@
     "root": true,
     "parserOptions": {
       "parser": "babel-eslint",
-      "sourceType": "module"
+      "ecmaFeatures": {
+        "legacyDecorators": true
+      }
     },
     "env": {
       "browser": true,

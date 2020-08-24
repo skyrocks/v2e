@@ -1,10 +1,9 @@
+import 'nprogress/nprogress.css'
+import NProgress from 'nprogress'
 import router from '.'
 import store from '../store'
-//import { Message } from 'element-ui'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/token'
 import getPageTitle from '@/utils/title'
+import { getToken } from '@/utils/token'
 import { createDynamicRouter } from './menu'
 
 NProgress.configure({ showSpinner: false })
@@ -39,7 +38,6 @@ router.beforeEach(async (to, from, next) => {
           next()
         } catch (error) {
           await store.dispatch('auth/resetToken')
-          //Message.error(error.message || '请重新登录')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
@@ -55,7 +53,7 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-router.afterEach(() => {
-  // finish progress bar
+router.afterEach(to => {
+  window.__V.route = to
   NProgress.done()
 })

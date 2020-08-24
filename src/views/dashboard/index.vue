@@ -11,11 +11,14 @@
 </template>
 
 <script>
+import Base from '../base'
 import { mapGetters } from 'vuex'
 import { findAuthMenu } from '@/api/menu'
+import { log } from '@/utils/log'
 
 export default {
   name: 'Dashboard',
+  extends: Base,
   data() {
     return {
       testMenu: []
@@ -24,7 +27,9 @@ export default {
   computed: {
     ...mapGetters(['name'])
   },
+
   methods: {
+    @log('查询菜单测试', this)
     onRequestTest() {
       findAuthMenu().then(response => {
         this.testMenu.push(response.success)
