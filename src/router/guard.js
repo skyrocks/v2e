@@ -4,7 +4,7 @@ import router from '.'
 import store from '../store'
 import getPageTitle from '@/utils/title'
 import { getToken } from '@/utils/token'
-import { createDynamicRouter } from './menu'
+import { createDynamicRouter } from '@/router/menu'
 
 NProgress.configure({ showSpinner: false })
 
@@ -27,15 +27,18 @@ router.beforeEach(async (to, from, next) => {
     } else {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
+        //登录后进入首页之后的所有页面
         next()
       } else {
+        //登录后的首页
         try {
           await store.dispatch('auth/profile')
           await store.dispatch('menu/findAuthMenu')
 
+          //创建动态路由,首页的菜单也是基于此路由构建
           createDynamicRouter()
 
-          next()
+          next({ ...to, replace: true })
         } catch (error) {
           await store.dispatch('auth/resetToken')
           next(`/login?redirect=${to.path}`)
@@ -53,7 +56,6 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-router.afterEach(to => {
-  window.__V.route = to
+router.afterEach(() => {
   NProgress.done()
 })

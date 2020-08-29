@@ -5,7 +5,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  Store.set(window.__C.K_TOKEN, token)
+  Store.set(window.__C.K_TOKEN, `Bearer ${token}`)
 }
 
 export function removeToken() {

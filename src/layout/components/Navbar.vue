@@ -7,13 +7,17 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <!-- <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" /> -->
+          <!-- <img src="@/assets/avatar_images/default.png" class="user-avatar" /> -->
+          <el-avatar shape="square" size="medium" :src="avatar">
+            {{ name }}
+          </el-avatar>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
@@ -42,7 +46,15 @@ export default {
     Hamburger
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    ...mapGetters(['sidebar', 'avatar']),
+    name() {
+      const name = this.$store.getters.name
+      if (name && name.length > 2) {
+        return name.substring(name.length - 2, name.length)
+      } else {
+        return name
+      }
+    }
   },
   methods: {
     toggleSideBar() {
