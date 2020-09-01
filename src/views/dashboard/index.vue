@@ -14,6 +14,13 @@
     </el-upload>
 
     <el-button type="primary" @click="onDownload">下载</el-button>
+
+    <el-input v-model="testData.input" placeholder="请输入内容"></el-input>
+    <el-input type="textarea" v-model="testData.desc"></el-input>
+    <el-button type="primary" @click="onTestGet">测试Get</el-button>
+    <el-button type="primary" @click="onTestPost">测试Post</el-button>
+
+    <p v-html="$xss(test)"></p>
   </div>
 </template>
 
@@ -22,13 +29,19 @@ import Base from '../base'
 import { mapGetters } from 'vuex'
 import { findAuthMenu } from '@/api/menu'
 import { getToken } from '@/utils/token'
-import { download } from '@/api/user'
+import { download, testPost, testGet } from '@/api/user'
 
 export default {
   name: 'Dashboard',
   extends: Base,
   data() {
     return {
+      testData: {
+        input: '',
+        desc: ''
+      },
+      test: `<a onclick='alert("xss攻击")'>链接</a>`,
+
       testMenu: [],
       fileList: [],
       uploadAction: `${process.env.VUE_APP_BASE_API}/api/users/upload`,
@@ -39,6 +52,14 @@ export default {
     ...mapGetters(['name'])
   },
   methods: {
+    onTestGet() {
+      alert(this.$xss(JSON.stringify(this.testData)))
+      testGet(this.testData)
+    },
+    onTestPost() {
+      testPost(this.testData)
+    },
+
     @window.__log('查询菜单测试')
     onRequestTest() {
       findAuthMenu().then(response => {

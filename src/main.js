@@ -10,14 +10,18 @@ import '@/styles/index.scss'
 import '@/utils/const'
 import '@/components/SvgIcon'
 import '@/router/guard'
-import '@/directives/func-permission'
 import '@/decorator/log'
+
+import has from '@/directives/func-permission'
+import xss from '@/plugins/xss'
 
 import App from './App'
 import store from './store'
 import router from './router'
 
 Vue.use(ElementUI)
+  .use(has)
+  .use(xss)
 
 Vue.config.productionTip = false
 
@@ -28,5 +32,5 @@ const vue = new Vue({
   render: h => h(App)
 })
 
-// 导出vue, 可以在js导入使用, 如: @/decorator/log
+// 导出vue, 可以在js导入使用, 如: @/plugins/request
 export default vue

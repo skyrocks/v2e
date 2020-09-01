@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/plugins/request'
 import { Message } from 'element-ui'
 
 export function download(data) {
@@ -27,5 +27,21 @@ export function download(data) {
         })
         reject(error)
       })
+  })
+}
+
+export function testGet(params) {
+  return request({
+    url: '/api/users/test',
+    method: 'get',
+    params
+  })
+}
+
+export function testPost(data) {
+  return request({
+    url: '/api/users/test',
+    method: 'post',
+    data
   })
 }
