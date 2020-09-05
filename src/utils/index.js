@@ -103,3 +103,47 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+/**
+ * 获取字符串长度, 一个中文代表2个字符
+ *
+ * @export
+ * @param {*} str
+ * @returns
+ */
+export function getStringLength(str) {
+  var length = 0
+  for (let i = 0; i < str.length; i++) {
+    if (str.charCodeAt(i) >= 0 && str.charCodeAt(i) <= 255) {
+      length = length + 1
+    } else {
+      length = length + 2
+    }
+  }
+  return length
+}
+
+/**
+ * 获取app-main区域的高度
+ *
+ * @export
+ * @returns
+ */
+export function getAppHeight() {
+  return document.documentElement.clientHeight - 50
+}
+
+/**
+ * 获取app-main区域的宽度
+ *
+ * @export
+ * @returns
+ */
+export function getAppWidth() {
+  const sb = localStorage.getItem('sb') //侧边栏状态, 0 关闭, 1 展开
+  if (sb == 1) {
+    return document.documentElement.clientWidth - 210
+  } else {
+    return document.documentElement.clientWidth - 54
+  }
+}

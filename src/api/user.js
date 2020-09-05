@@ -1,6 +1,18 @@
 import request from '@/plugins/request'
 import { Message } from 'element-ui'
 
+export function findAll(params, filter, sort, pageNum, pageSize = window.__C.P_PAGESIZE) {
+  return request({
+    url: `/api/users/${pageNum}/${pageSize}`,
+    method: 'get',
+    params: { filter, sort, params }
+    // params: {
+    //   filter: filter !== undefined ? JSON.stringify(filter) : '',
+    //   sort: sort !== undefined ? JSON.stringify(sort) : ''
+    // }
+  })
+}
+
 export function download(data) {
   return new Promise((resolve, reject) => {
     request({

@@ -1,5 +1,6 @@
 import _this from '@/main'
 import axios from 'axios'
+// import qs from 'qs'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/token'
@@ -19,11 +20,36 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 
-// request interceptor
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
       config.headers['Authorization'] = getToken()
+    }
+    if (config.method === 'post') {
+      // if (config.data) {
+      //   config.data = Qs.stringify({
+      //     ...config.data
+      //   })
+      // }
+    } else {
+      if (config.params) {
+        /**
+         * axios会对get请求的整个url进行encodeURI，导致有些get方法不能传[]，
+         * 所以在此拦截器中抢先进行encodeURIComponent处理，避开axios的encodeURI
+         * qs.stringify(config.params, {indices: false}) 等方法都不好用,不利用后台参数接收
+         */
+        let url = `${config.url}?`
+        let keys = Object.keys(config.params)
+        for (let key of keys) {
+          let val = config.params[key]
+          if (typeof val === 'object') {
+            val = JSON.stringify(val)
+          }
+          url += `${key}=${encodeURIComponent(val)}&`
+        }
+        config.url = url.substring(0, url.length - 1)
+        config.params = {}
+      }
     }
     return config
   },
