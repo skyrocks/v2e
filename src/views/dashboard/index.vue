@@ -3,8 +3,26 @@
     <div class="dashboard-text">name: {{ name }}</div>
 
     <svg-icon icon-class="wfxueji" />
-
-    <el-button type="primary" @click="onRequestTest">Test</el-button>
+    <el-form :model="postForm" :rules="rules">
+      <el-form-item prop="title">
+        <MDInput v-model="postForm.title" :maxlength="100" name="name" required>
+          Title
+        </MDInput>
+      </el-form-item>
+      <el-form-item prop="content">
+        <el-input
+          v-model="postForm.content"
+          :rows="1"
+          type="textarea"
+          class="article-textarea"
+          autosize
+          placeholder="Please enter the content"
+        />
+      </el-form-item>
+    </el-form>
+    <sticky :sticky-top="50">
+      <el-button v-waves type="primary" @click="onRequestTest">Test</el-button>
+    </sticky>
 
     <div v-for="(item, i) in testMenu" :key="i">{{ i }} {{ item }}</div>
 
@@ -27,15 +45,41 @@
 <script>
 import Base from '../base'
 import { mapGetters } from 'vuex'
+import Sticky from '@/components/Sticky'
+import MDInput from '@/components/MDInput'
 import { findAuthMenu } from '@/api/menu'
 import { getToken } from '@/utils/token'
+import clip from '@/utils/clipboard'
 import { download, testPost, testGet } from '@/api/user'
 
 export default {
   name: 'Dashboard',
   extends: Base,
+  components: { Sticky, MDInput },
   data() {
+    const validateRequire = (rule, value, callback) => {
+      console.log('validate')
+      if (value === '') {
+        this.$message({
+          message: rule.field + '为必传项',
+          type: 'error'
+        })
+        callback(new Error(rule.field + '为必传项'))
+      } else {
+        callback()
+      }
+    }
     return {
+      postForm: {
+        title: '',
+        content: ''
+      },
+
+      rules: {
+        title: [{ validator: validateRequire }],
+        content: [{ validator: validateRequire }]
+      },
+
       testData: {
         input: '',
         desc: ''
@@ -61,10 +105,11 @@ export default {
     },
 
     @window.__log('查询菜单测试')
-    onRequestTest() {
+    onRequestTest(e) {
       findAuthMenu().then(response => {
         this.testMenu.push(response.success)
       })
+      clip('aaa', e)
     },
 
     onDownload() {
@@ -82,6 +127,15 @@ export default {
   &-text {
     font-size: 30px;
     line-height: 46px;
+  }
+}
+.article-textarea ::v-deep {
+  textarea {
+    padding-right: 40px;
+    resize: none;
+    border: none;
+    border-radius: 0px;
+    border-bottom: 1px solid #bfcbd9;
   }
 }
 </style>

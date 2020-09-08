@@ -7,13 +7,16 @@ import ElementUI from 'element-ui'
 
 import '@/styles/variables.scss'
 import '@/styles/index.scss'
+
 import '@/utils/const'
-import '@/components/SvgIcon'
 import '@/router/guard'
 import '@/decorator/log'
+import '@/components/SvgIcon'
+import '@/components/Button'
+import xss from '@/plugins/xss'
 
 import has from '@/directives/func-permission'
-import xss from '@/plugins/xss'
+import waves from '@/directives/waves'
 
 import App from './App'
 import store from './store'
@@ -21,6 +24,7 @@ import router from './router'
 
 Vue.use(ElementUI)
   .use(has)
+  .use(waves)
   .use(xss)
 
 Vue.config.productionTip = false

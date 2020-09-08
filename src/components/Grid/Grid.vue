@@ -40,6 +40,7 @@
       :stripe="stripe"
       :height="tableHeight"
       :highlight-current-row="highlightCurrentRow"
+      :border="border"
       @current-change="onCurrentRowChange"
       @selection-change="onSelectionChange"
       @sort-change="onSortChange"
@@ -66,17 +67,32 @@
       ></el-pagination>
       <div class="item right" style="padding-top:2px;">
         <slot name="bbar"></slot>
-        <el-tooltip class="item" effect="dark" content="显示隐藏列" placement="top-start">
-          <el-button icon="el-icon-c-scale-to-original" size="mini" circle></el-button>
-        </el-tooltip>
+        <el-popover placement="top-end" trigger="hover">
+          <el-checkbox
+            v-model="item.show"
+            v-for="item in columns"
+            :key="item.value"
+            @change="onShowColumn($event, item.value)"
+            class="column-checked"
+          >
+            {{ item.label }}
+          </el-checkbox>
+          <el-button
+            slot="reference"
+            icon="el-icon-c-scale-to-original"
+            size="mini"
+            circle
+            :class="`column-btn ${hideCols > 0 ? 'hide-cols' : ''}`"
+          ></el-button>
+        </el-popover>
         <el-tooltip class="item" effect="dark" content="下载当前页数据" placement="top">
-          <el-button icon="el-icon-download" size="mini" circle></el-button>
+          <el-button icon="el-icon-download" size="mini" circle @click="onExport"></el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="下载远程全部数据" placement="top">
-          <el-button icon="el-icon-coin" size="mini" circle></el-button>
+          <el-button icon="el-icon-coin" size="mini" circle @click="onExportFromServer"></el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="清除过滤条件" placement="top-end">
-          <el-button icon="el-icon-refresh-left" size="mini" circle @click="onClearFilter"></el-button>
+        <el-tooltip class="item" effect="dark" content="清除过滤和排序" placement="top-end">
+          <el-button icon="el-icon-refresh-left" size="mini" circle @click="onClearFilterSort"></el-button>
         </el-tooltip>
       </div>
     </div>
@@ -84,6 +100,7 @@
 </template>
 <script>
 import { getStringLength } from '@/utils'
+import { export2Excel } from '@/vendor'
 
 export default {
   name: 'Grid',
@@ -91,6 +108,10 @@ export default {
     data: Array,
     height: Number,
     highlightCurrentRow: {
+      type: Boolean,
+      default: false
+    },
+    border: {
       type: Boolean,
       default: false
     },
@@ -138,11 +159,13 @@ export default {
   },
   data() {
     return {
-      columns: [],
+      highlight: '', //是否高亮显示内容
+      selectSlotWidth: '84', //默认两个字的宽度
+
+      columns: [], //列头数组{ label: llabel, value: prop, show: true }
       filterColumn: '',
       filterValue: '',
-      selectSlotWidth: '84', //默认两个字的宽度
-      highlight: '', //是否高亮显示内容
+      slotsArray: {}, //默认插槽内的column对象,prop:slot
 
       currentPage: 1,
       currentPageSize: undefined,
@@ -151,13 +174,20 @@ export default {
 
       $instance: undefined, //当前的实例
       sort: undefined, //排序参数
-      filters: {} //表头上的过滤参数
+      filters: {}, //表头上的过滤参数
+
+      bodyHeightStyle: '', //table-body高度,操作列显示的时候会用到
+      hideCols: 0 //已隐藏的列的个数
     }
   },
   mounted() {
     this.extractColumnProp()
+    this.bodyHeightStyle = this.$refs.grid.$el.querySelector('.el-table__body-wrapper').style //'height: 632px;'
   },
   methods: {
+    $table() {
+      return this.$refs.grid
+    },
     extractColumnProp() {
       let $slots = this.$slots.default
       for (let i = 0; i < $slots.length; i++) {
@@ -165,7 +195,8 @@ export default {
         const prop = c.componentOptions.propsData.prop
         if (prop) {
           const l = c.componentOptions.propsData.label
-          this.columns.push({ label: l, value: prop })
+          this.columns.push({ label: l, value: prop, show: true })
+          this.slotsArray[prop] = $slots[i]
           //一个字符6个宽度,中文字符表示两个字符, 两边留60的宽度
           if (this.selectSlotWidth < getStringLength(l) * 6 + 60) {
             this.selectSlotWidth = getStringLength(l) * 6 + 60
@@ -222,8 +253,10 @@ export default {
       }
       this.emitFilter()
     },
-    onClearFilter() {
+    onClearFilterSort() {
       this.$refs.grid.clearFilter()
+      this.$refs.grid.clearSort()
+      this.sort = undefined
       this.filters = {}
       this.filterValue = ''
       this.highlight = ''
@@ -247,6 +280,19 @@ export default {
           this.$emit('reload', params)
         }
       }
+    },
+    onShowColumn(val, prop) {
+      if (!val) {
+        this.hideCols++
+      } else {
+        this.hideCols--
+      }
+      this.slotsArray[prop].componentInstance.show(val)
+      const $el = this.$refs.grid.$el
+      const heightStyle = this.bodyHeightStyle
+      setTimeout(function() {
+        $el.querySelector('.el-table__body-wrapper').style = heightStyle
+      }, 100)
     },
     getParams(obj) {
       let filter = {}
@@ -289,6 +335,26 @@ export default {
     },
     existsParentListener(eventName) {
       return typeof this.getInstance().$listeners[eventName] === 'function'
+    },
+    onExport() {
+      let cols = []
+      let data = []
+      this.columns.forEach(col => {
+        if (col.show) {
+          cols.push(col)
+        }
+      })
+      this.data.forEach(d => {
+        let newData = {}
+        for (let i = 0; i < cols.length; i++) {
+          newData[cols[i].value] = d[cols[i].value]
+        }
+        data.push(newData)
+      })
+      export2Excel(cols, data, '导出数据')
+    },
+    onExportFromServer() {
+      // TODO 从服务端下载
     }
   }
 }
@@ -322,5 +388,15 @@ export default {
 }
 .bbar {
   padding: 5px 10px;
+}
+.column-checked {
+  display: block;
+  margin: 5px 0;
+}
+.column-btn {
+  margin-right: 10px;
+  &.hide-cols {
+    color: #409eff;
+  }
 }
 </style>
