@@ -11,3 +11,5 @@ export function setToken(token) {
 export function removeToken() {
   Store.remove(window.__C.K_TOKEN)
 }
+
+export const HeaderToken = { Authorization: getToken() }

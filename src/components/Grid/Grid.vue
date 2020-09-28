@@ -29,7 +29,7 @@
             placeholder="请选择"
             :style="`width:${selectSlotWidth}px;`"
           >
-            <el-option v-for="item in columns" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in colsFilter" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-input>
       </div>
@@ -51,6 +51,15 @@
       :summary-method="summaryMethod"
       :span-method="spanMethod"
     >
+      <template slot="empty">
+        <span v-if="loading">
+          <i class="el-icon-loading" style="font-size:1.6rem;"></i>
+          数据加载中
+        </span>
+        <span v-else>
+          暂无数据
+        </span>
+      </template>
       <slot></slot>
     </el-table>
     <div class="bbar">
@@ -67,7 +76,7 @@
       ></el-pagination>
       <div class="item right" style="padding-top:2px;">
         <slot name="bbar"></slot>
-        <el-popover placement="top-end" trigger="hover">
+        <el-popover placement="top-end" trigger="hover" v-if="bbarColumn">
           <el-checkbox
             v-model="item.show"
             v-for="item in columns"
@@ -85,13 +94,13 @@
             :class="`column-btn ${hideCols > 0 ? 'hide-cols' : ''}`"
           ></el-button>
         </el-popover>
-        <el-tooltip class="item" effect="dark" content="下载当前页数据" placement="top">
+        <el-tooltip class="item" effect="dark" content="下载当前页数据" placement="top" v-if="bbarExport">
           <el-button icon="el-icon-download" size="mini" circle @click="onExport"></el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="下载远程全部数据" placement="top">
+        <el-tooltip class="item" effect="dark" content="下载远程全部数据" placement="top" v-if="bbarExportAll">
           <el-button icon="el-icon-coin" size="mini" circle @click="onExportFromServer"></el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="清除过滤和排序" placement="top-end">
+        <el-tooltip class="item" effect="dark" content="清除过滤和排序" placement="top-end" v-if="bbarClear">
           <el-button icon="el-icon-refresh-left" size="mini" circle @click="onClearFilterSort"></el-button>
         </el-tooltip>
       </div>
@@ -105,6 +114,10 @@ import { export2Excel } from '@/vendor'
 export default {
   name: 'Grid',
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     data: Array,
     height: Number,
     highlightCurrentRow: {
@@ -143,7 +156,24 @@ export default {
     },
     sumText: String,
     summaryMethod: Function,
-    spanMethod: Function
+    spanMethod: Function,
+
+    bbarColumn: {
+      type: Boolean,
+      default: true
+    },
+    bbarExport: {
+      type: Boolean,
+      default: true
+    },
+    bbarExportAll: {
+      type: Boolean,
+      default: true
+    },
+    bbarClear: {
+      type: Boolean,
+      default: true
+    }
   },
   computed: {
     tableHeight() {
@@ -155,6 +185,9 @@ export default {
         height = height - 40 //tbar高度, 如果tbar配置的不是标准的工具条, 可能高度会不正常
       }
       return height
+    },
+    colsFilter() {
+      return this.columns.filter(c => c.filterBar)
     }
   },
   data() {
@@ -167,6 +200,7 @@ export default {
       filterValue: '',
       slotsArray: {}, //默认插槽内的column对象,prop:slot
 
+      currentParams: { pageNum: 1, filter: '', sort: '' }, //记录当前查询参数
       currentPage: 1,
       currentPageSize: undefined,
       currentRow: undefined,
@@ -177,29 +211,28 @@ export default {
       filters: {}, //表头上的过滤参数
 
       bodyHeightStyle: '', //table-body高度,操作列显示的时候会用到
-      hideCols: 0 //已隐藏的列的个数
+      hideCols: 0, //已隐藏的列的个数
+
+      $table: undefined //table组件ref
     }
   },
   mounted() {
+    this.$table = this.$refs.grid
     this.extractColumnProp()
     this.bodyHeightStyle = this.$refs.grid.$el.querySelector('.el-table__body-wrapper').style //'height: 632px;'
   },
   methods: {
-    $table() {
-      return this.$refs.grid
-    },
     extractColumnProp() {
       let $slots = this.$slots.default
       for (let i = 0; i < $slots.length; i++) {
-        const c = $slots[i]
-        const prop = c.componentOptions.propsData.prop
-        if (prop) {
-          const l = c.componentOptions.propsData.label
-          this.columns.push({ label: l, value: prop, show: true })
-          this.slotsArray[prop] = $slots[i]
+        const col = $slots[i]
+        const { type, prop, label, filterBar } = col.componentInstance
+        if (type !== 'selection') {
+          this.columns.push({ label, value: prop, filterBar, show: true })
+          this.slotsArray[prop] = col
           //一个字符6个宽度,中文字符表示两个字符, 两边留60的宽度
-          if (this.selectSlotWidth < getStringLength(l) * 6 + 60) {
-            this.selectSlotWidth = getStringLength(l) * 6 + 60
+          if (this.selectSlotWidth < getStringLength(label) * 6 + 60) {
+            this.selectSlotWidth = getStringLength(label) * 6 + 60
           }
         }
       }
@@ -309,12 +342,16 @@ export default {
       const params = {
         pageSize: this.currentPageSize || this.pageSize,
         pageNum: this.currentPage,
-        sort: this.sort === undefined ? '' : `${this.sort.prop} ${this.sort.order.replace(/ending/, '')}`,
-        filter
+        filter,
+        sort:
+          this.sort === undefined || this.sort === null
+            ? ''
+            : `${this.sort.prop} ${this.sort.order.replace(/ending/, '')}`
       }
       if (obj) {
         Object.assign(params, obj)
       }
+      this.currentParams = params
       return params
     },
     getInstance() {
@@ -336,11 +373,50 @@ export default {
     existsParentListener(eventName) {
       return typeof this.getInstance().$listeners[eventName] === 'function'
     },
+    updateRow(index, data) {
+      this.$set(this.data, index, data)
+    },
+    getRows(key) {
+      let indexs = []
+      const rows = this.$refs.grid.selection
+      if (rows.length === 0) {
+        // 没有
+        return { indexs: [], rows: [] }
+      } else if (rows.length === this.data.length) {
+        // 全部
+        for (let i = 0; i < this.rows.length; i++) {
+          indexs.push(i)
+        }
+        return { indexs, rows }
+      } else {
+        rows.forEach(r => {
+          this.data.forEach((d, index) => {
+            if (r[key] === d[key]) {
+              indexs.push(index)
+              return
+            }
+          })
+        })
+        return { indexs, rows }
+      }
+    },
+    getRow(key, value) {
+      let row = {}
+      this.data.forEach((d, index) => {
+        if (value === d[key]) {
+          row.index = index
+          row.row = d
+          return
+        }
+      })
+      return row
+    },
     onExport() {
       let cols = []
       let data = []
       this.columns.forEach(col => {
         if (col.show) {
+          //显示在页面上的就可以导出
           cols.push(col)
         }
       })

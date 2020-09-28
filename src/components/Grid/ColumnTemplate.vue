@@ -10,12 +10,25 @@
     :sortable="sortable"
     :show-overflow-tooltip="true"
     v-if="showColumn"
-  ></el-table-column>
+  >
+    <template slot-scope="scope">
+      <slot :row="scope.row"></slot>
+    </template>
+  </el-table-column>
 </template>
 <script>
 import mixin from './mixin'
 export default {
-  name: 'GridColumn',
+  name: 'GridColumnTemplate',
+  props: {
+    sortable: {
+      default: () => false //默认不排序
+    },
+    filterBar: {
+      type: Boolean,
+      default: () => false //是否加载到头部的下来过滤组件内
+    }
+  },
   mixins: [mixin]
 }
 </script>

@@ -1,8 +1,15 @@
 // 统一全局css变量
-$color-font-primary: #333333;
+$color-font-primary: #606266;
+$color-font-black: #303133;
 $color-font-grey: #909399;
+$color-font-blue: #409EFF;
+$color-font-red: #f56c6c;
 
-:export {
-  colorFontPrimary: $color-font-primary;
-  colorFontGrey: $color-font-grey;
-}
+$size-font-small: 1.2rem;
+$size-font-normal: 1.4rem;
+$size-font-larger: 1.8rem;
+
+// :export {
+//   colorFontPrimary: $color-font-primary;
+//   colorFontGrey: $color-font-grey;
+// }

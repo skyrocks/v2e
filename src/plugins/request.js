@@ -1,6 +1,6 @@
 import _this from '@/main'
 import axios from 'axios'
-// import qs from 'qs'
+//import Qs from 'qs'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/token'
@@ -26,11 +26,10 @@ service.interceptors.request.use(
       config.headers['Authorization'] = getToken()
     }
     if (config.method === 'post') {
-      // if (config.data) {
-      //   config.data = Qs.stringify({
-      //     ...config.data
-      //   })
-      // }
+      if (config.data) {
+        //参数中数组的情况在调用的位置通过encodeURIComponent转换,其他情况并不需要特别转换
+        //config.data = Qs.stringify(config.data)
+      }
     } else {
       if (config.params) {
         /**
@@ -72,16 +71,9 @@ service.interceptors.response.use(
           return againRequest(response)
         } else {
           if (res.code === 401) {
+            console.log(_this.$route)
             // 401: 认证错误
-            if (_this.$route && _this.$route.path === '/login') {
-              location.reload()
-            } else {
-              // 测试
-              Message({
-                message: _this.$route.path,
-                type: 'error',
-                duration: 5 * 1000
-              }) // test end
+            if (_this.$route && _this.$route.path !== '/login' && _this.$route.path !== '/') {
               MessageBox.confirm('您已经登录超时, 您可以选择重新登录或者留在当前页面', '退出', {
                 confirmButtonText: '重新登录',
                 cancelButtonText: '留在当前页面',
@@ -91,8 +83,8 @@ service.interceptors.response.use(
                 location.reload()
               })
             }
-          } else if (res.code === 901) {
-            // 901: 业务错误
+          } else if (res.code === 901 || res.code === 498) {
+            // 901: 业务错误, 498: 账号禁用类错误
             Message({
               message: res.message || 'Error',
               type: 'error',
@@ -110,6 +102,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+    console.log(error)
     Message({
       message: '数据请求异常',
       type: 'error',

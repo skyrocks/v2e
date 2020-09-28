@@ -147,3 +147,16 @@ export function getAppWidth() {
     return document.documentElement.clientWidth - 54
   }
 }
+
+/**
+ * 对象数组合并去重
+ *
+ * @export
+ * @param {*} arr
+ * @returns
+ */
+export function concatUnique(arr1, arr2, key) {
+  const arr = arr1.concat(arr2)
+  const res = new Map()
+  return arr.filter(item => !res.has(item[key]) && res.set(item[key], 1))
+}

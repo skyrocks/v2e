@@ -47,3 +47,10 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+.el-dialog__body {
+  padding: 15px 20px;
+}
+.el-table .cell {
+  line-height: 15px;  //覆盖原23
+}
