@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Base from '../base'
+import { mixin } from '@/mixin'
 import { mapGetters } from 'vuex'
 import Sticky from '@/components/Sticky'
 import MDInput from '@/components/MDInput'
@@ -54,7 +54,7 @@ import { download, testPost, testGet } from '@/api/user'
 
 export default {
   name: 'Dashboard',
-  extends: Base,
+  mixins: [mixin],
   components: { Sticky, MDInput },
   data() {
     const validateRequire = (rule, value, callback) => {

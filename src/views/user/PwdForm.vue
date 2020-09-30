@@ -1,5 +1,8 @@
 <template>
   <el-form :model="formData" :rules="rules" ref="form">
+    <el-form-item label="旧密码" prop="oldPwd" v-if="me">
+      <el-input type="password" v-model="formData.oldPwd" autocomplete="off"></el-input>
+    </el-form-item>
     <el-form-item label="新密码" prop="newPwd">
       <el-input type="password" v-model="formData.newPwd" autocomplete="off"></el-input>
     </el-form-item>
@@ -7,16 +10,24 @@
       <el-input type="password" v-model="formData.checkPwd" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item>
-      <default-button type="default" @click="onClose">取 消</default-button>
+      <default-button type="default" @click="onClose">
+        {{ me ? '重 置' : '取 消' }}
+      </default-button>
       <default-button @click="onSave">保 存</default-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-import { updatePwd } from '@/api/user'
+import { updatePwd, updateMyPwd } from '@/api/user'
 export default {
   name: 'UserPwdForm',
+  props: {
+    me: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     const validateCheckPwd = (rule, value, callback) => {
       if (value === '') {
@@ -31,9 +42,11 @@ export default {
       formData: {
         // 修改密码数据
         newPwd: '',
-        checkPwd: ''
+        checkPwd: '',
+        oldPwd: ''
       },
       rules: {
+        oldPwd: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
         newPwd: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
           {
@@ -47,25 +60,30 @@ export default {
   },
   methods: {
     onSave() {
+      if (!this.me) {
+        this.formData.oldPwd = '*'
+      }
       this.$refs.form.validate(valid => {
         if (valid) {
-          console.log(this)
-          console.log(this.$parent)
-          console.log(this.formData)
-          const userIds = this.$parent.$parent.getUserIds()
-          updatePwd(userIds, this.formData.newPwd).then(res => {
-            if (res.success) {
-              this.$emit('success')
-              this.resetForm()
-              this.$message.success('密码已经修改成功')
-            } else {
-              this.$message.error(res.message)
-            }
-          })
+          if (this.me) {
+            updateMyPwd(this.formData.oldPwd, this.formData.newPwd).then(this.callback)
+          } else {
+            const userIds = this.$parent.$parent.getUserIds()
+            updatePwd(userIds, this.formData.newPwd).then(this.callback)
+          }
         } else {
           return false
         }
       })
+    },
+    callback(res) {
+      if (res.success) {
+        this.$emit('success')
+        this.resetForm()
+        this.$message.success('密码已经修改成功')
+      } else {
+        this.$message.error(res.message)
+      }
     },
     onClose() {
       this.resetForm()

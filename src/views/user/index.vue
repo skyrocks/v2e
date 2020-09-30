@@ -1,11 +1,16 @@
 <template>
   <div class="view-wrap">
-    <grid ref="grid" :data="userData" :height="height" :total="total" @reload="loadUser" :loading="loading">
+    <grid ref="grid" :data="userData" :total="total" @reload="loadUser" :loading="loading">
       <template slot="tbar">
         <el-button-group>
-          <default-button has="Enable" el-icon="unlock" @click="() => this.updateStatus(1)">激活</default-button>
-          <default-button has="Disable" el-icon="lock" @click="() => this.updateStatus(0)">禁用</default-button>
+          <default-button class="enable" has="Enable" el-icon="unlock" @click="() => this.updateStatus(1)">
+            激活
+          </default-button>
+          <default-button class="disable" has="Disable" el-icon="lock" @click="() => this.updateStatus(0)">
+            禁用
+          </default-button>
           <default-button
+            class="editPwd"
             has="EditPwd"
             el-icon="edit-outline"
             @click="
@@ -18,6 +23,7 @@
             修改密码
           </default-button>
           <default-button
+            class="editExpiry"
             has="EditExpiry"
             el-icon="edit"
             @click="
@@ -30,6 +36,7 @@
             修改有效期
           </default-button>
           <default-button
+            class="add"
             has="Add"
             el-icon="circle-plus-outline"
             @click="
@@ -41,7 +48,9 @@
           >
             添加虚拟账号
           </default-button>
-          <default-button has="Remove" el-icon="remove-outline" @click="onRemove">删除虚拟账号</default-button>
+          <default-button class="remove" has="Remove" el-icon="remove-outline" @click="onRemove">
+            删除虚拟账号
+          </default-button>
         </el-button-group>
       </template>
       <column type="selection"></column>
@@ -188,7 +197,7 @@
           个用户的密码
         </span>
       </template>
-      <PwdForm @close="dialogEditPwd = false" @success="dialogEditPwd = false"></PwdForm>
+      <PwdForm :me="false" @close="dialogEditPwd = false" @success="dialogEditPwd = false"></PwdForm>
     </el-dialog>
     <el-dialog :visible.sync="dialogEditExpiry" width="30%" :close-on-click-modal="false">
       <template slot="title">
@@ -243,10 +252,11 @@
 </template>
 
 <script>
-import Base from '../base'
+import { mixin } from '@/mixin'
+import { guide } from './guide'
 import { MessageBox } from 'element-ui'
+import { concatUnique } from '@/utils'
 import { Grid, Column, ColumnTemplate } from '@/components/Grid'
-import { getAppHeight, concatUnique } from '@/utils'
 import { findAll, remove, updateStatus, addRoles, removeRole, browserPhoto } from '@/api/user'
 import { HeaderToken } from '@/utils/token'
 import UserForm from './UserForm'
@@ -256,7 +266,7 @@ import RoleDialog from '../role/Dialog'
 
 export default {
   name: 'User',
-  extends: Base,
+  mixins: [guide, mixin],
   components: { Grid, Column, ColumnTemplate, RoleDialog, UserForm, PwdForm, ExpiryForm },
   data() {
     return {
@@ -276,13 +286,7 @@ export default {
 
       photoUrls: {}, //照片地址 userId:url
       uploadPhotoAction: `${process.env.VUE_APP_BASE_API}/api/users/photo/`,
-      headers: HeaderToken,
-      photo001: ''
-    }
-  },
-  computed: {
-    height() {
-      return getAppHeight() - 15 //减去.view-wrap
+      headers: HeaderToken
     }
   },
   mounted() {

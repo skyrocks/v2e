@@ -7,5 +7,8 @@ window.__C = {
   K_SIDEBARSTATUS: 'sb',
 
   //分页查询每页默认记录数
-  P_PAGESIZE: 50
+  P_PAGESIZE: 50,
+
+  //页面引导手册标志键名, 存储的是json
+  K_GUIDE: 'guide'
 }

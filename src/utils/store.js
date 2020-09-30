@@ -4,7 +4,16 @@ import Storage from './storage'
 export default {
   get(key) {
     if (window.localStorage) {
-      return Storage.get(key)
+      const val = Storage.get(key)
+      if (val) {
+        try {
+          return JSON.parse(val)
+        } catch {
+          return val
+        }
+      } else {
+        return val
+      }
     } else {
       return Cookies.get(key)
     }
@@ -12,7 +21,11 @@ export default {
 
   set(key, value) {
     if (window.localStorage) {
-      Storage.set(key, value)
+      if (typeof value === 'object') {
+        Storage.set(key, JSON.stringify(value))
+      } else {
+        Storage.set(key, value)
+      }
     } else {
       Cookies.set(key, value)
     }

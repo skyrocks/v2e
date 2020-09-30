@@ -6,6 +6,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    userId: '',
     avatar: ''
   }
 }
@@ -18,6 +19,9 @@ const mutations = {
   },
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_ID: (state, userId) => {
+    state.userId = userId
   },
   SET_NAME: (state, name) => {
     state.name = name
@@ -81,6 +85,7 @@ const actions = {
         .then(response => {
           const { data } = response
           commit('SET_NAME', data.userName)
+          commit('SET_ID', data.userId)
           // todo commit('SET_AVATAR', avatar)
           resolve(data)
         })

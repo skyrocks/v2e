@@ -97,6 +97,14 @@ export function updatePwd(userIds, pwd) {
   })
 }
 
+export function updateMyPwd(oldPwd, pwd) {
+  return request({
+    url: '/api/users/update/my-pwd',
+    method: 'post',
+    data: { oldPwd, pwd }
+  })
+}
+
 /**
  * 更新用户有效期
  *

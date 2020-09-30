@@ -21,7 +21,7 @@
         <slot name="tbar"></slot>
       </div>
       <div :class="`item ${filterPosition}`" v-if="filterPosition !== 'none'">
-        <el-input placeholder="请输入搜索内容..." v-model="filterValue" @change="onCustomFilter">
+        <el-input placeholder="请输入搜索内容..." v-model="filterValue" @change="onCustomFilter" class="grid-serach">
           <el-select
             :class="`${highlight}`"
             v-model="filterColumn"
@@ -64,7 +64,7 @@
     </el-table>
     <div class="bbar">
       <el-pagination
-        class="item left"
+        class="item left grid-pagination"
         v-if="pagination"
         @size-change="onSizeChange"
         @current-change="onCurrentPageChange"
@@ -74,9 +74,9 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
-      <div class="item right" style="padding-top:2px;">
+      <div class="item right gird-bbar" style="padding-top:2px;">
         <slot name="bbar"></slot>
-        <el-popover placement="top-end" trigger="hover" v-if="bbarColumn">
+        <el-popover class="item column" placement="top-end" trigger="hover" v-if="bbarColumn">
           <el-checkbox
             v-model="item.show"
             v-for="item in columns"
@@ -94,13 +94,13 @@
             :class="`column-btn ${hideCols > 0 ? 'hide-cols' : ''}`"
           ></el-button>
         </el-popover>
-        <el-tooltip class="item" effect="dark" content="下载当前页数据" placement="top" v-if="bbarExport">
+        <el-tooltip class="item export" effect="dark" content="下载当前页数据" placement="top" v-if="bbarExport">
           <el-button icon="el-icon-download" size="mini" circle @click="onExport"></el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="下载远程全部数据" placement="top" v-if="bbarExportAll">
+        <!-- <el-tooltip class="item exportAll" effect="dark" content="下载远程全部数据" placement="top" v-if="bbarExportAll">
           <el-button icon="el-icon-coin" size="mini" circle @click="onExportFromServer"></el-button>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="清除过滤和排序" placement="top-end" v-if="bbarClear">
+        </el-tooltip> -->
+        <el-tooltip class="item clear" effect="dark" content="清除过滤和排序" placement="top-end" v-if="bbarClear">
           <el-button icon="el-icon-refresh-left" size="mini" circle @click="onClearFilterSort"></el-button>
         </el-tooltip>
       </div>
@@ -108,9 +108,8 @@
   </div>
 </template>
 <script>
-import { getStringLength } from '@/utils'
+import { getAppHeight, getStringLength } from '@/utils'
 import { export2Excel } from '@/vendor'
-
 export default {
   name: 'Grid',
   props: {
@@ -119,7 +118,14 @@ export default {
       default: false
     },
     data: Array,
-    height: Number,
+    offSetHeight: {
+      type: Number,
+      default: 15 //框架中.view-wrap padding-top
+    },
+    height: {
+      type: Number,
+      default: 0
+    },
     highlightCurrentRow: {
       type: Boolean,
       default: false
@@ -177,7 +183,8 @@ export default {
   },
   computed: {
     tableHeight() {
-      let height = this.height
+      //height优先级高于offSetHeight, 如果没有传入height, 就取当前页面高度减去偏移高度
+      let height = this.height == 0 ? getAppHeight() - this.offSetHeight : this.height
       if (this.pagination) {
         height = height - 42 //42是分页组件的高度
       }

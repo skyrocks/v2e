@@ -9,9 +9,16 @@
         <div class="avatar-wrapper">
           <!-- <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" /> -->
           <!-- <img src="@/assets/avatar_images/default.png" class="user-avatar" /> -->
-          <el-avatar shape="square" size="medium" :src="avatar">
+          <!-- <el-avatar shape="square" size="medium" fit="cover" :src="avatar">
             {{ name }}
-          </el-avatar>
+          </el-avatar> -->
+          <el-image class="avatar" :src="avatar" fit="cover">
+            <div slot="error">
+              <el-avatar shape="square" size="medium" fit="cover">
+                {{ name }}
+              </el-avatar>
+            </div>
+          </el-image>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -20,7 +27,7 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <router-link to="/">
+          <router-link to="/modify-pwd">
             <el-dropdown-item>
               修改密码
             </el-dropdown-item>
@@ -44,14 +51,20 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import request from '@/plugins/request'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      avatar: ''
+    }
+  },
   computed: {
-    ...mapGetters(['sidebar', 'avatar']),
+    ...mapGetters(['sidebar']),
     name() {
       const name = this.$store.getters.name
       if (name && name.length > 2) {
@@ -61,7 +74,19 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getAvatar()
+  },
   methods: {
+    getAvatar() {
+      request({
+        url: `/api/users/photo/${this.$store.getters.userId}`,
+        responseType: 'blob',
+        method: 'get'
+      }).then(res => {
+        this.avatar = URL.createObjectURL(new Blob([res]))
+      })
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -81,6 +106,12 @@ export default {
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
   .hamburger-container {
     line-height: 46px;
     height: 100%;

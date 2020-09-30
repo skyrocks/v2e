@@ -17,6 +17,20 @@ const createDynamicRouter = () => {
             meta: { title: '工作台', icon: 'wfapply' }
           }
         ]
+      },
+      {
+        path: '/modify-pwd',
+        component: Layout,
+        redirect: '/modify-pwd/index',
+        children: [
+          {
+            path: 'index',
+            name: 'modify-pwd',
+            component: () => import('@/views/user/Pwd'),
+            meta: { title: '修改密码' }
+          }
+        ],
+        hidden: true
       }
     ])
     .concat(createMenuTree(store.getters.menus))

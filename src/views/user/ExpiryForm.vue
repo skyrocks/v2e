@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { updateExpiry } from '@/api/user'
 export default {
   name: 'UserExpiryFrom',
@@ -33,8 +33,8 @@ export default {
       rules: { date: [{ required: true, message: '请输入有效日期' }] },
       pickerOptions: {
         disabledDate(time) {
-          return moment()
-            .add(-1, 'd')
+          return dayjs()
+            .add(-1, 'day')
             .isAfter(time)
         }
       }

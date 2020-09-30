@@ -68,7 +68,7 @@
 <script>
 import { isCellphone, isEmail } from '@/utils/validate'
 import { concatUnique } from '@/utils'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import RoleGrid from '../role/Grid'
 import { create, update, validate } from '@/api/user'
 
@@ -146,8 +146,8 @@ export default {
       },
       pickerOptions: {
         disabledDate(time) {
-          return moment()
-            .add(-1, 'd')
+          return dayjs()
+            .add(-1, 'day')
             .isAfter(time)
         }
       },
