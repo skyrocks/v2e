@@ -18,6 +18,11 @@ router.beforeEach(async (to, from, next) => {
   // 动态设置页面Title
   document.title = getPageTitle(to.meta.title)
 
+  // CAS模式
+  if (process.env.VUE_APP_CAS_URL) {
+    await store.dispatch('auth/shiftCasToken')
+  }
+
   const hasToken = getToken()
   if (hasToken) {
     if (to.path === '/login') {

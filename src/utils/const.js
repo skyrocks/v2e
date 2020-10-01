@@ -1,7 +1,9 @@
 //常量类
 window.__C = {
-  //存储在sessionStorage种的键名: 当前的api token
+  //存储在cookie种的键名: 当前的api token
   K_TOKEN: 'token',
+  //存储在cookie种的键名: 从cas服务返回的token
+  K_CASTOKEN: 'cas-token',
 
   //sidebar状态, 0, 1
   K_SIDEBARSTATUS: 'sb',

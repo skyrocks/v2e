@@ -1,15 +1,15 @@
-import Store from './store'
+import Cookies from 'js-cookie'
 
 export function getToken() {
-  return Store.get(window.__C.K_TOKEN)
+  return Cookies.get(window.__C.K_TOKEN)
 }
 
 export function setToken(token) {
-  Store.set(window.__C.K_TOKEN, `Bearer ${token}`)
+  Cookies.set(window.__C.K_TOKEN, `Bearer ${token}`)
 }
 
 export function removeToken() {
-  Store.remove(window.__C.K_TOKEN)
+  Cookies.remove(window.__C.K_TOKEN)
 }
 
 export const HeaderToken = { Authorization: getToken() }

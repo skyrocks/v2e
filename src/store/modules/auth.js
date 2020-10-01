@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie'
 import { login, loginSms, refreshToken, profile } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/token'
 import { resetRouter } from '@/router'
@@ -38,8 +39,8 @@ const actions = {
       login({ loginName: loginName.trim(), password, captcha: captcha.trim(), captchaId })
         .then(response => {
           const { data } = response
-          commit('SET_TOKEN', data)
           setToken(data)
+          commit('SET_TOKEN', getToken())
           resolve()
         })
         .catch(error => {
@@ -110,6 +111,16 @@ const actions = {
       commit('RESET_STATE')
       resolve()
     })
+  },
+
+  // 单点登录模式, cookie中cas-token转换成token, 同时存在在store中
+  shiftCasToken({ commit }) {
+    const token = Cookies.get(window.__C.K_CASTOKEN)
+    if (token) {
+      setToken(token)
+      commit('SET_TOKEN', token)
+      Cookies.remove(window.__C.K_CASTOKEN)
+    }
   }
 }
 

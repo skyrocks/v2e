@@ -98,11 +98,13 @@
 </template>
 <script>
 import uuidv1 from 'uuid/v1'
+import { mixin } from './mixin'
 import { createDynamicRouter } from '@/router/menu'
 import { sendSmsCode, loginError } from '@/api/auth'
 
 export default {
   name: 'Login',
+  mixins: [mixin],
   data() {
     return {
       loginType: 0, //0:pwd, 1:sms
