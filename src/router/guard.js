@@ -3,7 +3,7 @@ import NProgress from 'nprogress'
 import router from '.'
 import store from '../store'
 import getPageTitle from '@/utils/title'
-import { getToken } from '@/utils/token'
+import { getToken, fixToken } from '@/utils/token'
 import { createDynamicRouter } from '@/router/menu'
 
 NProgress.configure({ showSpinner: false })
@@ -18,13 +18,9 @@ router.beforeEach(async (to, from, next) => {
   // 动态设置页面Title
   document.title = getPageTitle(to.meta.title)
 
-  // CAS模式
-  if (process.env.VUE_APP_CAS_URL) {
-    await store.dispatch('auth/shiftCasToken')
-  }
-
   const hasToken = getToken()
   if (hasToken) {
+    fixToken() //单点登录模式下
     if (to.path === '/login') {
       // 如果是已登录状态,跳回首页,不允许重复登录
       next({ path: '/' })

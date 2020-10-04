@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie'
 import { login, loginSms, refreshToken, profile } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/token'
 import { resetRouter } from '@/router'
@@ -6,8 +5,9 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
     userId: '',
+    loginName: '',
+    name: '',
     avatar: ''
   }
 }
@@ -23,6 +23,9 @@ const mutations = {
   },
   SET_ID: (state, userId) => {
     state.userId = userId
+  },
+  SET_LOGINNAME: (state, loginName) => {
+    state.loginName = loginName
   },
   SET_NAME: (state, name) => {
     state.name = name
@@ -85,9 +88,9 @@ const actions = {
       profile()
         .then(response => {
           const { data } = response
-          commit('SET_NAME', data.userName)
           commit('SET_ID', data.userId)
-          // todo commit('SET_AVATAR', avatar)
+          commit('SET_LOGINNAME', data.loginName)
+          commit('SET_NAME', data.userName)
           resolve(data)
         })
         .catch(error => {
@@ -97,30 +100,14 @@ const actions = {
   },
 
   logout({ commit }) {
-    return new Promise(resolve => {
-      removeToken()
-      resetRouter()
-      commit('RESET_STATE')
-      resolve()
-    })
+    removeToken()
+    resetRouter()
+    commit('RESET_STATE')
   },
 
   resetToken({ commit }) {
-    return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
-      resolve()
-    })
-  },
-
-  // 单点登录模式, cookie中cas-token转换成token, 同时存在在store中
-  shiftCasToken({ commit }) {
-    const token = Cookies.get(window.__C.K_CASTOKEN)
-    if (token) {
-      setToken(token)
-      commit('SET_TOKEN', token)
-      Cookies.remove(window.__C.K_CASTOKEN)
-    }
+    removeToken()
+    commit('RESET_STATE')
   }
 }
 

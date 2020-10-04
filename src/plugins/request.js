@@ -22,7 +22,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    if (store.getters.token) {
+    if (getToken()) {
       config.headers['Authorization'] = getToken()
     }
     if (config.method === 'post') {

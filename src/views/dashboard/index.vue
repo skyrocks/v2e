@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-container">
+    A站
     <div class="dashboard-text">name: {{ name }}</div>
 
     <svg-icon icon-class="wfxueji" />

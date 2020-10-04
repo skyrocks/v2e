@@ -3,9 +3,10 @@ const getters = {
   device: state => state.app.device,
 
   token: state => state.auth.token,
-  avatar: state => state.auth.avatar,
-  name: state => state.auth.name,
   userId: state => state.auth.userId,
+  loginName: state => state.auth.loginName,
+  name: state => state.auth.name,
+  avatar: state => state.auth.avatar,
 
   menus: state => state.menu.menus
 }

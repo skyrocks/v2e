@@ -31,6 +31,19 @@ export function refreshToken(data) {
 }
 
 /**
+ * 获取CAS模式下的token
+ *
+ * @export
+ * @returns
+ */
+export function getCasToken(jSessionId) {
+  return request({
+    url: `/cas/token/${jSessionId}`,
+    method: 'post'
+  })
+}
+
+/**
  * 获取登录后的user信息
  *
  * @export
@@ -62,9 +75,9 @@ export function loginError() {
  * @export
  * @returns
  */
-export function logout() {
+export function logout(loginName) {
   return request({
-    url: '/api/auth/logout',
+    url: `/api/auth/logout/${loginName}`,
     method: 'post'
   })
 }

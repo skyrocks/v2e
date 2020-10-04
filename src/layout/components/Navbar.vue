@@ -52,6 +52,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import request from '@/plugins/request'
+import { logout } from '@/api/auth'
 
 export default {
   components: {
@@ -91,8 +92,15 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
+      const loginName = this.$store.getters.loginName
       await this.$store.dispatch('auth/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      if (process.env.VUE_APP_SSO_MODE === 'cas') {
+        // CAS模式, 跳转到CAS后端再重定向
+        window.location.href = `${process.env.VUE_APP_BASE_API}/cas/logout/${loginName}`
+      } else {
+        logout(loginName)
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      }
     }
   }
 }
