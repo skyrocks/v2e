@@ -1,9 +1,17 @@
+<!--
+ * @Author: shilei
+ * @Date: 2020-09-25 11:29:07
+ * @LastEditors: shilei
+ * @LastEditTime: 2020-10-15 15:15:59
+ * @Description: 这是一个什么文件...
+ * @FilePath: /aolong-parrot/src/views/user/ExpiryForm.vue
+-->
 <template>
-  <el-form :model="formData" :rules="rules" ref="form">
+  <el-form ref="form" :model="formData" :rules="rules">
     <el-form-item label="截止有效日期" prop="date">
       <el-date-picker
-        type="date"
         v-model="formData.date"
+        type="date"
         value-format="yyyy-MM-dd"
         style="width: 100%;"
         :picker-options="pickerOptions"
@@ -24,7 +32,8 @@ export default {
   props: {
     userIds: {
       type: Array,
-      require: true
+      require: true,
+      default: () => []
     }
   },
   data() {

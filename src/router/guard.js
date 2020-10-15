@@ -20,7 +20,7 @@ router.beforeEach(async (to, from, next) => {
 
   const hasToken = getToken()
   if (hasToken) {
-    fixToken() //单点登录模式下
+    fixToken() // 单点登录模式下
     if (to.path === '/login') {
       // 如果是已登录状态,跳回首页,不允许重复登录
       next({ path: '/' })
@@ -28,15 +28,15 @@ router.beforeEach(async (to, from, next) => {
     } else {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
-        //登录后进入首页之后的所有页面
+        // 登录后进入首页之后的所有页面
         next()
       } else {
-        //登录后的首页
+        // 登录后的首页
         try {
           await store.dispatch('auth/profile')
           await store.dispatch('menu/findAuthMenu')
 
-          //创建动态路由,首页的菜单也是基于此路由构建
+          // 创建动态路由,首页的菜单也是基于此路由构建
           createDynamicRouter()
 
           next({ ...to, replace: true })

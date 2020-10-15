@@ -117,7 +117,7 @@ export default {
       inputCellphone: '',
       inputSMSCode: '',
 
-      //图片验证码的请求地址
+      // 图片验证码的请求地址
       verifyCodeId: '',
       verifyCodeUrl: '',
       inputVerifyCode: '',
@@ -180,8 +180,8 @@ export default {
       })
     },
     validLoginName() {
-      //const valid_map = ['devtest', 'admin', 'editor']
-      //return valid_map.indexOf(str.trim()) >= 0
+      // const valid_map = ['devtest', 'admin', 'editor']
+      // return valid_map.indexOf(str.trim()) >= 0
       return true
     },
 

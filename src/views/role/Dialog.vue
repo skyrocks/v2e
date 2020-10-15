@@ -13,12 +13,12 @@
       :data="roleData"
       :height="590"
       :total="total"
-      @reload="loadRole"
-      filterPosition="left"
-      @selection-change="onSelectionChange"
+      filter-position="left"
       :bbar-column="false"
       :bbar-export="false"
       :bbar-export-all="false"
+      @reload="loadRole"
+      @selection-change="onSelectionChange"
     >
       <column type="selection"></column>
       <column prop="roleCode" label="角色编号"></column>
@@ -68,11 +68,6 @@ export default {
       default: () => false
     }
   },
-  watch: {
-    visible(val) {
-      this.visibleDialog = val
-    }
-  },
   data() {
     return {
       visibleDialog: false,
@@ -81,6 +76,11 @@ export default {
       total: 0,
 
       selection: []
+    }
+  },
+  watch: {
+    visible(val) {
+      this.visibleDialog = val
     }
   },
   mounted() {

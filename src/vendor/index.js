@@ -1,8 +1,8 @@
 export function export2Excel(columns, list, excelName) {
   require.ensure([], () => {
     const { export_json_to_excel } = require('@/vendor/Export2Excel')
-    let tHeader = []
-    let filterVal = []
+    const tHeader = []
+    const filterVal = []
     columns.forEach(item => {
       tHeader.push(item.label)
       filterVal.push(item.value)

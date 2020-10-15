@@ -10,7 +10,7 @@ import { create } from '@/api/log'
 window.__log = function(method) {
   return function(target, key, descriptor) {
     descriptor.value = descriptor.value.after(() => {
-      create({ method, route: _this.$route.path, menu: _this.$route.meta.title, logType: '2' }) //logType=2 方法类日志
+      create({ method, route: _this.$route.path, menu: _this.$route.meta.title, logType: '2' }) // logType=2 方法类日志
     })
   }
 }

@@ -2,10 +2,10 @@
   <div>
     <el-form
       v-show="!dialogRole"
+      ref="form"
       :model="formData"
       :rules="rules"
       label-width="80px"
-      ref="form"
       style="margin-right:30px;"
     >
       <el-form-item label="账号" prop="loginName">
@@ -14,8 +14,8 @@
       <el-form-item label="姓名" prop="userName">
         <el-input v-model="formData.userName" autocomplete="off" :disabled="!isVirtualAccount"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password" v-if="isCreate">
-        <el-input type="password" v-model="formData.password" autocomplete="off"></el-input>
+      <el-form-item v-if="isCreate" label="密码" prop="password">
+        <el-input v-model="formData.password" type="password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="手机号码" prop="cellphone">
         <el-input v-model="formData.cellphone" autocomplete="off" :disabled="!isVirtualAccount"></el-input>
@@ -25,22 +25,22 @@
       </el-form-item>
       <el-form-item label="有效期" prop="expiryDate">
         <el-date-picker
-          type="date"
           v-model="formData.expiryDate"
+          type="date"
           value-format="yyyy-MM-dd"
           style="width: 100%;"
           :picker-options="pickerOptions"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="状态" prop="userStatus" v-if="!isCreate">
+      <el-form-item v-if="!isCreate" label="状态" prop="userStatus">
         <el-switch v-model="formData.userStatus" :active-value="1" :inactive-value="0"></el-switch>
       </el-form-item>
-      <el-form-item label="角色" v-if="isCreate">
+      <el-form-item v-if="isCreate" label="角色">
         <div>
           <el-tag
-            style="margin-right: 5px;"
-            :key="i"
             v-for="(r, i) in roles"
+            :key="i"
+            style="margin-right: 5px;"
             closable
             :disable-transitions="true"
             @close="onRemoveRole(i)"
@@ -59,7 +59,7 @@
         </default-button>
       </el-form-item>
     </el-form>
-    <div class="role-wrap" v-show="dialogRole">
+    <div v-show="dialogRole" class="role-wrap">
       <RoleGrid ref="rolegrid" :height="500" @close="dialogRole = false" @selected="onAddRole"></RoleGrid>
     </div>
   </div>
@@ -155,8 +155,8 @@ export default {
       dialogRole: false,
       roles: [],
 
-      isCreate: true, //添加
-      isVirtualAccount: true //虚拟账号
+      isCreate: true, // 添加
+      isVirtualAccount: true // 虚拟账号
     }
   },
   methods: {

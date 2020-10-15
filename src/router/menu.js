@@ -59,8 +59,8 @@ const createDynamicRouter = () => {
   }
  */
 const createMenuTree = data => {
-  let menus = []
-  //顶级
+  const menus = []
+  // 顶级
   data.forEach(ele => {
     if (ele.parentId === '') {
       if (ele.children.length == 0) {
@@ -91,7 +91,7 @@ const createMenuTree = data => {
 }
 
 const createSubMenu = data => {
-  let menus = []
+  const menus = []
   data.forEach(ele => {
     if (ele.children.length === 0) {
       // 末级
@@ -99,7 +99,7 @@ const createSubMenu = data => {
         path: ele.menuCode,
         name: ele.menuId,
         component: () => Promise.resolve(require(`@/views/${ele.route}/index`).default),
-        /*        
+        /*
         component: () => resolve => require([`@/views/${ele.route}/index`], resolve),
         component: () => import('@/views/${ele.route}/index')
         以上两种写法都会有问题, 编译的时候就会出现警告
@@ -107,11 +107,11 @@ const createSubMenu = data => {
         然后在路由请求的时候根本加载不出来,日志也不会报出什么错误
         这个坑很大
         */
-        //resolve => require([`@/views/${ele.route}/index`], resolve),
+        // resolve => require([`@/views/${ele.route}/index`], resolve),
         meta: { title: ele.menuName, funcKeys: ele.funcKeys }
       })
     } else {
-      //非末级
+      // 非末级
       menus.push({
         path: ele.menuCode,
         name: ele.menuId,

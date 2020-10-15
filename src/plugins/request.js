@@ -1,13 +1,13 @@
 import _this from '@/main'
 import axios from 'axios'
-//import Qs from 'qs'
+// import Qs from 'qs'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/token'
 
 const againRequest = async response => {
   await store.dispatch('auth/refreshToken', getToken())
-  let config = response.config
+  const config = response.config
   config.headers['Authorization'] = getToken()
   const resp = await axios.request(config)
   return resp.data
@@ -27,8 +27,8 @@ service.interceptors.request.use(
     }
     if (config.method === 'post') {
       if (config.data) {
-        //参数中数组的情况在调用的位置通过encodeURIComponent转换,其他情况并不需要特别转换
-        //config.data = Qs.stringify(config.data)
+        // 参数中数组的情况在调用的位置通过encodeURIComponent转换,其他情况并不需要特别转换
+        // config.data = Qs.stringify(config.data)
       }
     } else {
       if (config.params) {
@@ -38,8 +38,8 @@ service.interceptors.request.use(
          * qs.stringify(config.params, {indices: false}) 等方法都不好用,不利用后台参数接收
          */
         let url = `${config.url}?`
-        let keys = Object.keys(config.params)
-        for (let key of keys) {
+        const keys = Object.keys(config.params)
+        for (const key of keys) {
           let val = config.params[key]
           if (typeof val === 'object') {
             val = JSON.stringify(val)
@@ -67,7 +67,7 @@ service.interceptors.response.use(
     } else {
       if (!res.success) {
         if (res.code === 499) {
-          //499: 认证过期;
+          // 499: 认证过期;
           return againRequest(response)
         } else {
           if (res.code === 401) {

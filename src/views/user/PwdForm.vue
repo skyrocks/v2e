@@ -1,13 +1,13 @@
 <template>
-  <el-form :model="formData" :rules="rules" ref="form">
-    <el-form-item label="旧密码" prop="oldPwd" v-if="me">
-      <el-input type="password" v-model="formData.oldPwd" autocomplete="off"></el-input>
+  <el-form ref="form" :model="formData" :rules="rules">
+    <el-form-item v-if="me" label="旧密码" prop="oldPwd">
+      <el-input v-model="formData.oldPwd" type="password" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="新密码" prop="newPwd">
-      <el-input type="password" v-model="formData.newPwd" autocomplete="off"></el-input>
+      <el-input v-model="formData.newPwd" type="password" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="确认密码" prop="checkPwd">
-      <el-input type="password" v-model="formData.checkPwd" autocomplete="off"></el-input>
+      <el-input v-model="formData.checkPwd" type="password" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item>
       <default-button type="default" @click="onClose">

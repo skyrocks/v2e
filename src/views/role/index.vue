@@ -1,3 +1,11 @@
+<!--
+ * @Author: shilei
+ * @Date: 2020-09-22 10:33:29
+ * @LastEditors: shilei
+ * @LastEditTime: 2020-10-15 15:04:53
+ * @Description: 这是一个什么文件...
+ * @FilePath: /aolong-parrot/src/views/role/index.vue
+-->
 <template>
   <div class="view-wrap">
     <grid :data="roleData" :height="height" :total="total" @reload="loadRole">
@@ -47,7 +55,7 @@ export default {
   },
   computed: {
     height() {
-      return getAppHeight() - 15 //减去.view-wrap
+      return getAppHeight() - 15 // 减去.view-wrap
     }
   },
   mounted() {

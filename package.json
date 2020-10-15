@@ -36,6 +36,7 @@
     "autoprefixer": "^9.8.5",
     "babel-eslint": "^10.1.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
+    "babel-plugin-syntax-jsx": "^6.18.0",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
@@ -47,55 +48,6 @@
     "script-loader": "^0.7.2",
     "svg-sprite-loader": "^5.0.0",
     "vue-template-compiler": "^2.6.11"
-  },
-  "babel": {
-    "presets": [
-      "@vue/cli-plugin-babel/preset"
-    ],
-    "env": {
-      "development": {
-        "plugins": [
-          "dynamic-import-node"
-        ]
-      }
-    }
-  },
-  "eslintConfig": {
-    "root": true,
-    "parserOptions": {
-      "parser": "babel-eslint",
-      "ecmaFeatures": {
-        "legacyDecorators": true
-      }
-    },
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/prettier"
-    ],
-    "rules": {
-      "no-console": "off"
-    },
-    "globals": {
-      "__log": true
-    }
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "singleQuote": true,
-    "semi": false,
-    "printWidth": 120,
-    "htmlWhitespaceSensitivity": "ignore"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
   },
   "browserslist": [
     "> 1%",

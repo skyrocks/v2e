@@ -35,7 +35,7 @@
     <el-button type="primary" @click="onDownload">下载</el-button>
 
     <el-input v-model="testData.input" placeholder="请输入内容"></el-input>
-    <el-input type="textarea" v-model="testData.desc"></el-input>
+    <el-input v-model="testData.desc" type="textarea"></el-input>
     <el-button type="primary" @click="onTestGet">测试Get</el-button>
     <el-button type="primary" @click="onTestPost">测试Post</el-button>
 
@@ -55,8 +55,8 @@ import { download, testPost, testGet } from '@/api/user'
 
 export default {
   name: 'Dashboard',
-  mixins: [mixin],
   components: { Sticky, MDInput },
+  mixins: [mixin],
   data() {
     const validateRequire = (rule, value, callback) => {
       console.log('validate')

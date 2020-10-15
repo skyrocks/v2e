@@ -11,18 +11,18 @@
               <span :class="`login-type ${loginType === 1 ? 'active' : ''}`">短信登录</span>
             </el-button>
           </div>
-          <div class="login-pwd-container" v-show="loginType === 0">
+          <div v-show="loginType === 0" class="login-pwd-container">
             <el-form>
               <el-form-item>
-                <el-input placeholder="请输入账号" v-model="form.pwd.loginName">
+                <el-input v-model="form.pwd.loginName" placeholder="请输入账号">
                   <template slot="prepend"><i class="el-icon-user icon-style"></i></template>
                 </el-input>
               </el-form-item>
               <el-form-item>
                 <el-input
+                  v-model="form.pwd.password"
                   placeholder="请输入密码"
                   show-password
-                  v-model="form.pwd.password"
                   @keyup.enter.native="onPwdLogin"
                 >
                   <template slot="prepend"><i class="el-icon-lock icon-style"></i></template>
@@ -31,8 +31,8 @@
               <transition name="el-zoom-in-top">
                 <el-form-item v-show="showCaptcha">
                   <el-input
-                    placeholder="请输入图片验证码"
                     v-model="form.pwd.captcha"
+                    placeholder="请输入图片验证码"
                     style="width:65%;"
                     @keyup.enter.native="onPwdLogin"
                   >
@@ -61,22 +61,22 @@
               <el-button type="text"><span class="forget-pwd">忘记密码</span></el-button>
             </div>
           </div>
-          <div class="login-sms-container" v-show="loginType === 1">
+          <div v-show="loginType === 1" class="login-sms-container">
             <el-form>
               <el-form-item>
-                <el-input placeholder="请输入手机号码" v-model="form.sms.cellphone">
+                <el-input v-model="form.sms.cellphone" placeholder="请输入手机号码">
                   <template slot="prepend">
                     <i class="el-icon-mobile-phone icon-style"></i>
                   </template>
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-input placeholder="请输入短信验证码" v-model="form.sms.smsCode" @keyup.enter.native="onSmsLogin">
+                <el-input v-model="form.sms.smsCode" placeholder="请输入短信验证码" @keyup.enter.native="onSmsLogin">
                   <template slot="prepend">
                     <i class="el-icon-c-scale-to-original icon-style"></i>
                   </template>
                   <template slot="suffix">
-                    <el-button type="text" @click.native.prevent="onSendSmsCode" :disabled="waiting">
+                    <el-button type="text" :disabled="waiting" @click.native.prevent="onSendSmsCode">
                       <span :class="`get-smsCode ${waiting ? 'waiting' : ''}`">
                         {{ waiting ? waitText : '发送验证码' }}
                       </span>
@@ -105,9 +105,9 @@ export default {
   name: 'Login',
   data() {
     return {
-      loginType: 0, //0:pwd, 1:sms
-      showCaptcha: false, //默认不显示图片验证码,登录错误的时候再显示
-      captchaUrl: '', //验证码图片的地址
+      loginType: 0, // 0:pwd, 1:sms
+      showCaptcha: false, // 默认不显示图片验证码,登录错误的时候再显示
+      captchaUrl: '', // 验证码图片的地址
       form: {
         pwd: {
           loginName: '',
@@ -122,9 +122,9 @@ export default {
         }
       },
       redirect: undefined,
-      loading: false, //登录等待标志
-      waiting: false, //发送验证码后的等待标志
-      intervalId: null, //发送验证码后的计时器Id
+      loading: false, // 登录等待标志
+      waiting: false, // 发送验证码后的等待标志
+      intervalId: null, // 发送验证码后的计时器Id
       waitText: '',
       lastTime: 60
     }
@@ -207,8 +207,8 @@ export default {
         this.lastTime--
         this.waitText = `${this.lastTime}s后获取`
         if (this.lastTime <= 0) {
-          clearInterval(this.intervalId) //清除计时器
-          this.intervalId = null //设置为null
+          clearInterval(this.intervalId) // 清除计时器
+          this.intervalId = null // 设置为null
           this.lastTime = 60
           this.waiting = false
         }

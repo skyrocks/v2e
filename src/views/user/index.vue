@@ -1,12 +1,12 @@
 <template>
   <div class="view-wrap">
-    <grid ref="grid" :data="userData" :total="total" @reload="loadUser" :loading="loading">
+    <grid ref="grid" :data="userData" :total="total" :loading="loading" @reload="loadUser">
       <template slot="tbar">
         <el-button-group>
-          <default-button class="enable" has="Enable" el-icon="unlock" @click="() => this.updateStatus(1)">
+          <default-button class="enable" has="Enable" el-icon="unlock" @click="() => updateStatus(1)">
             激活
           </default-button>
-          <default-button class="disable" has="Disable" el-icon="lock" @click="() => this.updateStatus(0)">
+          <default-button class="disable" has="Disable" el-icon="lock" @click="() => updateStatus(0)">
             禁用
           </default-button>
           <default-button
@@ -84,7 +84,7 @@
       <column prop="email" label="邮箱地址"></column>
       <ColumnTemplate label="头像">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="left" v-if="scope.row.existsPhoto">
+          <el-popover v-if="scope.row.existsPhoto" trigger="hover" placement="left">
             <el-image
               style="width: 150px; height: 150px"
               :src="`${photoUrls[scope.row.userId]}`"
@@ -127,12 +127,12 @@
       </ColumnTemplate>
       <ColumnTemplate label="角色">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="left" v-if="scope.row.roles.length > 0">
+          <el-popover v-if="scope.row.roles.length > 0" trigger="hover" placement="left">
             <div class="role-tag-wrap">
               <el-tag
-                class="role-tag"
-                :key="i"
                 v-for="(r, i) in scope.row.roles"
+                :key="i"
+                class="role-tag"
                 closable
                 :disable-transitions="true"
                 @close="onRemoveRole(scope.row, r.roleId, i)"
@@ -242,8 +242,8 @@
       </template>
       <UserForm
         ref="userForm"
-        @close="dialogUserForm = false"
         :edit-user="currentUser"
+        @close="dialogUserForm = false"
         @success="onCreateSuccess"
       ></UserForm>
     </el-dialog>
@@ -266,25 +266,25 @@ import RoleDialog from '../role/Dialog'
 
 export default {
   name: 'User',
-  mixins: [guide, mixin],
   components: { Grid, Column, ColumnTemplate, RoleDialog, UserForm, PwdForm, ExpiryForm },
+  mixins: [guide, mixin],
   data() {
     return {
       loading: true,
       userData: [],
       total: 0,
 
-      checkUserIds: [], //勾选的用户ID, 用于用户修改
-      currentUser: '', //当前选中的用户记录, 用于添加角色 或者 编辑
+      checkUserIds: [], // 勾选的用户ID, 用于用户修改
+      currentUser: '', // 当前选中的用户记录, 用于添加角色 或者 编辑
 
-      dialogUserForm: false, //创建虚拟账号的窗口标识
+      dialogUserForm: false, // 创建虚拟账号的窗口标识
 
       dialogEditPwd: false, // 修改密码打开窗口标识
       dialogEditExpiry: false, // 修改有效期窗口标识
 
       dialogRole: false, // 角色选择窗口标识
 
-      photoUrls: {}, //照片地址 userId:url
+      photoUrls: {}, // 照片地址 userId:url
       uploadPhotoAction: `${process.env.VUE_APP_BASE_API}/api/users/photo/`,
       headers: HeaderToken
     }
@@ -298,7 +298,7 @@ export default {
         if (res.success) {
           this.userData = res.data.list
           this.total = res.data.total
-          //加载照片信息
+          // 加载照片信息
           this.userData.forEach(user => {
             if (user.existsPhoto) {
               this.getPhoto(user.userId)
@@ -346,7 +346,7 @@ export default {
     },
     onAddRole(roles) {
       this.dialogRole = false
-      let roleIds = []
+      const roleIds = []
       roles.forEach(r => {
         roleIds.push(r.roleId)
       })
@@ -395,7 +395,7 @@ export default {
     onSuccessUpPhoto(res, file, fileList, userId) {
       this.photoUrls[userId] = URL.createObjectURL(file.raw)
       const { index, row } = this.$refs.grid.getRow('userId', userId)
-      //table刷新字段
+      // table刷新字段
       row.existsPhoto = true
       this.$refs.grid.updateRow(index, row)
     },
@@ -414,7 +414,7 @@ export default {
       browserPhoto(userId).then(res => {
         this.photoUrls[userId] = URL.createObjectURL(new Blob([res]))
         const { index, row } = this.$refs.grid.getRow('userId', userId)
-        //table刷新字段
+        // table刷新字段
         this.$refs.grid.updateRow(index, row)
       })
     },

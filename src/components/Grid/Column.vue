@@ -1,5 +1,6 @@
 <template>
   <el-table-column
+    v-if="showColumn"
     :type="type"
     :prop="prop"
     :label="label"
@@ -9,7 +10,6 @@
     :filters="filters"
     :sortable="sortable"
     :show-overflow-tooltip="true"
-    v-if="showColumn"
   ></el-table-column>
 </template>
 <script>

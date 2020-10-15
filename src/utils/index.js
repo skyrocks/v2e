@@ -140,7 +140,7 @@ export function getAppHeight() {
  * @returns
  */
 export function getAppWidth() {
-  const sb = localStorage.getItem('sb') //侧边栏状态, 0 关闭, 1 展开
+  const sb = localStorage.getItem('sb') // 侧边栏状态, 0 关闭, 1 展开
   if (sb == 1) {
     return document.documentElement.clientWidth - 210
   } else {

@@ -23,7 +23,7 @@ export default {
         vnodes.push(<svg-icon icon-class={icon} />)
       }
     } else {
-      //保持对齐
+      // 保持对齐
       vnodes.push(<span style="margin-right:11px;" />)
     }
 
