@@ -1,3 +1,11 @@
+/*
+ * @Author: shilei
+ * @Date: 2020-08-22 23:53:00
+ * @LastEditors: shilei
+ * @LastEditTime: 2020-10-15 16:39:52
+ * @Description: 这是一个什么文件...
+ * @FilePath: /aolong-parrot/src/main.js
+ */
 import Vue from 'vue'
 
 import 'normalize.css/normalize.css'
@@ -18,9 +26,9 @@ import xss from '@/plugins/xss'
 import has from '@/directives/func-permission'
 import waves from '@/directives/waves'
 
-import App from './App'
 import store from './store'
 import router from './router'
+import App from './App'
 
 Vue.use(ElementUI)
   .use(has)

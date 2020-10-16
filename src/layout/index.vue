@@ -1,10 +1,19 @@
+<!--
+ * @Author: shilei
+ * @Date: 2020-08-22 23:53:00
+ * @LastEditors: shilei
+ * @LastEditTime: 2020-10-15 16:13:01
+ * @Description: 这是一个什么文件...
+ * @FilePath: /aolong-parrot/src/layout/index.vue
+-->
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
-    <div class="main-container">
+    <div :class="{ hasTagsView: needTagsView }" class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <navbar />
+        <tags-view v-if="needTagsView" />
       </div>
       <app-main />
     </div>
@@ -12,27 +21,26 @@
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Layout',
   components: {
     Navbar,
     Sidebar,
+    TagsView,
     AppMain
   },
   mixins: [ResizeMixin],
   computed: {
-    sidebar() {
-      return this.$store.state.app.sidebar
-    },
-    device() {
-      return this.$store.state.app.device
-    },
-    fixedHeader() {
-      return this.$store.state.settings.fixedHeader
-    },
+    ...mapState({
+      sidebar: state => state.app.sidebar,
+      device: state => state.app.device,
+      needTagsView: state => state.settings.tagsView,
+      fixedHeader: state => state.settings.fixedHeader
+    }),
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,

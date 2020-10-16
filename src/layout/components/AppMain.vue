@@ -1,7 +1,17 @@
+<!--
+ * @Author: shilei
+ * @Date: 2020-08-17 09:45:42
+ * @LastEditors: shilei
+ * @LastEditTime: 2020-10-15 16:08:09
+ * @Description: 这是一个什么文件...
+ * @FilePath: /aolong-parrot/src/layout/components/AppMain.vue
+-->
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
+      <keep-alive :include="cachedViews">
+        <router-view :key="key" />
+      </keep-alive>
     </transition>
   </section>
 </template>
@@ -10,6 +20,9 @@
 export default {
   name: 'AppMain',
   computed: {
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews
+    },
     key() {
       return this.$route.path
     }
@@ -17,7 +30,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .app-main {
   /*50 = navbar  */
   min-height: calc(100vh - 50px);
@@ -27,6 +40,17 @@ export default {
 }
 .fixed-header + .app-main {
   padding-top: 50px;
+}
+
+.hasTagsView {
+  .app-main {
+    /* 84 = navbar + tags-view = 50 + 34 */
+    min-height: calc(100vh - 84px);
+  }
+
+  .fixed-header + .app-main {
+    padding-top: 84px;
+  }
 }
 </style>
 

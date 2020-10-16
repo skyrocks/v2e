@@ -2,18 +2,18 @@
  * @Author: shilei
  * @Date: 2020-08-17 09:45:42
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-16 17:07:08
+ * @LastEditTime: 2020-10-16 17:06:42
  * @Description: 构建动态路由
  * @FilePath: /aolong-parrot/src/router/menu.js
  */
 import router from '.'
-import staticRoutes from './static'
+import staticRoute from './static'
 import Layout from '@/layout'
 import store from '@/store'
 
 const createDynamicRouter = () => {
   const routes = []
-    .concat(staticRoutes)
+    .concat(staticRoute)
     .concat(createMenuTree(store.getters.menus))
     .concat([{ path: '*', redirect: '/404', hidden: true }]) // * 404  page must be placed at the end !!!
 

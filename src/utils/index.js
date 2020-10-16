@@ -1,3 +1,5 @@
+import _this from '@/main'
+
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -130,7 +132,8 @@ export function getStringLength(str) {
  * @returns
  */
 export function getAppHeight() {
-  return document.documentElement.clientHeight - 50
+  console.log(_this.$store.getters.tagsView)
+  return document.documentElement.clientHeight - 50 - (_this.$store.getters.tagsView ? 34 : 0)
 }
 
 /**
