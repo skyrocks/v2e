@@ -1,5 +1,5 @@
 <template>
-  <div class="view-wrap">
+  <div>
     <grid ref="grid" :data="userData" :total="total" :loading="loading" @reload="loadUser">
       <template slot="tbar">
         <el-button-group>
@@ -48,7 +48,7 @@
           >
             添加虚拟账号
           </default-button>
-          <default-button class="remove" has="Remove" el-icon="remove-outline" @click="onRemove">
+          <default-button class="remove" has="Remove" el-icon="delete" @click="onRemove">
             删除虚拟账号
           </default-button>
         </el-button-group>
@@ -75,7 +75,7 @@
         column-key="userStatus"
         filter-multiple
         :filters="[
-          { text: '正常', value: 1 },
+          { text: '启用', value: 1 },
           { text: '禁用', value: 0 }
         ]"
       ></column>
@@ -160,6 +160,8 @@
           </el-popover>
           <el-button
             v-if="scope.row.roles.length === 0"
+            type="primary"
+            plain
             size="mini"
             @click="
               () => {
@@ -172,7 +174,7 @@
           </el-button>
         </template>
       </ColumnTemplate>
-      <ColumnTemplate label="操作">
+      <ColumnTemplate label="修改">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -184,7 +186,7 @@
               }
             "
           >
-            编辑
+            修改
           </el-button>
         </template>
       </ColumnTemplate>
@@ -378,7 +380,6 @@ export default {
     },
     onCreateSuccess(formData) {
       this.dialogUserForm = false
-      console.log(formData)
       if (formData === '') {
         // 新增
         this.loadUser(this.$refs.grid.currentParams)

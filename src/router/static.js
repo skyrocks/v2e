@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-10-15 17:14:23
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-16 17:04:47
+ * @LastEditTime: 2020-10-19 14:35:28
  * @Description: 静态路由
  * @FilePath: /aolong-parrot/src/router/static.js
  */
@@ -22,13 +22,13 @@ export default [
     ]
   },
   {
-    path: '/modify-pwd',
+    path: '/pwd',
     component: Layout,
-    redirect: '/modify-pwd/index',
+    redirect: '/pwd/index',
     children: [
       {
         path: 'index',
-        name: 'modify-pwd',
+        name: 'pwd',
         component: () => import('@/views/user/Pwd'),
         meta: { title: '修改密码' }
       }

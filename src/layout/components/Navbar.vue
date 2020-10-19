@@ -27,7 +27,7 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <router-link to="/modify-pwd">
+          <router-link to="/pwd">
             <el-dropdown-item>
               修改密码
             </el-dropdown-item>

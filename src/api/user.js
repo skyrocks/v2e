@@ -59,7 +59,7 @@ export function update(data) {
  */
 export function remove(userIds) {
   return request({
-    url: '/api/users/remove',
+    url: '/api/users/delete',
     method: 'post',
     data: userIds
   })
@@ -147,7 +147,7 @@ export function addRoles(userId, roleIds) {
  */
 export function removeRole(userId, roleId) {
   return request({
-    url: `/api/users/remove/role/${roleId}/${userId}`,
+    url: `/api/users/delete/role/${roleId}/${userId}`,
     method: 'post'
   })
 }

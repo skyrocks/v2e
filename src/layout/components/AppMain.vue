@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-08-17 09:45:42
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-15 16:08:09
+ * @LastEditTime: 2020-10-19 21:23:34
  * @Description: 这是一个什么文件...
  * @FilePath: /aolong-parrot/src/layout/components/AppMain.vue
 -->
@@ -10,7 +10,7 @@
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
-        <router-view :key="key" />
+        <router-view :key="key" class="view-container" />
       </keep-alive>
     </transition>
   </section>
@@ -51,6 +51,10 @@ export default {
   .fixed-header + .app-main {
     padding-top: 84px;
   }
+}
+
+.view-container {
+  padding-top: 15px;
 }
 </style>
 

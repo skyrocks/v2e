@@ -21,7 +21,13 @@
         <slot name="tbar"></slot>
       </div>
       <div v-if="filterPosition !== 'none'" :class="`item ${filterPosition}`">
-        <el-input v-model="filterValue" placeholder="请输入搜索内容..." class="grid-serach" @change="onCustomFilter">
+        <el-input
+          v-model="filterValue"
+          size="medium"
+          placeholder="请输入搜索内容..."
+          class="grid-serach"
+          @change="onCustomFilter"
+        >
           <el-select
             slot="prepend"
             v-model="filterColumn"
