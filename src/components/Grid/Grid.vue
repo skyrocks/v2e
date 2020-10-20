@@ -456,7 +456,6 @@ export default {
 <style lang="scss" scoped>
 .tbar,
 .bbar {
-  padding: 0 10px;
   &::before,
   &::after {
     display: table;
@@ -478,6 +477,10 @@ export default {
 .bbar {
   padding: 5px 10px;
 }
+.tbar {
+  padding: 0px 10px 5px 10px;
+}
+
 .column-checked {
   display: block;
   margin: 5px 0;

@@ -131,7 +131,7 @@ export function updateExpiry(userIds, expiry) {
  */
 export function addRoles(userId, roleIds) {
   return request({
-    url: `/api/users/create/role/${userId}`,
+    url: `/api/users/create/roles/${userId}`,
     method: 'post',
     data: { roleIds: encodeURIComponent(roleIds) }
   })

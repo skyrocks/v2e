@@ -389,7 +389,6 @@ export default {
         const rowClone = JSON.parse(JSON.stringify(this.currentUser))
         rowClone.expiryDate = formData.expiryDate
         rowClone.userStatus = formData.userStatus
-        console.log(rowClone)
         this.$refs.grid.updateRow(index, rowClone)
       }
     },

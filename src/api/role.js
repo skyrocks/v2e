@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-09-22 11:06:14
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-19 20:17:09
+ * @LastEditTime: 2020-10-20 12:10:03
  * @Description: Api-Role
  * @FilePath: /aolong-parrot/src/api/role.js
  */
@@ -24,6 +24,25 @@ export function findAll(params, filter, sort, pageNum, pageSize = window.__C.P_P
     url: `/api/roles/${pageNum}/${pageSize}`,
     method: 'get',
     params: { filter, sort, params }
+  })
+}
+
+/**
+ * 查询角色下的所有用户
+ *
+ * @export
+ * @param {*} roleId
+ * @param {*} filter
+ * @param {*} sort
+ * @param {*} pageNum
+ * @param {*} [pageSize=window.__C.P_PAGESIZE]
+ * @returns
+ */
+export function findUsers(roleId, filter, sort, pageNum, pageSize = window.__C.P_PAGESIZE) {
+  return request({
+    url: `/api/roles/users/${roleId}/${pageNum}/${pageSize}`,
+    method: 'get',
+    params: { filter, sort }
   })
 }
 
@@ -69,5 +88,37 @@ export function remove(roleIds) {
     url: '/api/roles/delete',
     method: 'post',
     data: roleIds
+  })
+}
+
+/**
+ * 删除角色下的用户
+ *
+ * @export
+ * @param {*} roleId
+ * @param {*} userIds
+ * @returns
+ */
+export function removeUsers(roleId, userIds) {
+  return request({
+    url: '/api/roles/delete/users',
+    method: 'post',
+    data: { roleId, userIds: encodeURIComponent(userIds) }
+  })
+}
+
+/**
+ * 添加角色下的用户
+ *
+ * @export
+ * @param {*} roleId
+ * @param {*} userIds
+ * @returns
+ */
+export function addUsers(roleId, userIds) {
+  return request({
+    url: '/api/roles/create/users',
+    method: 'post',
+    data: { roleId, userIds: encodeURIComponent(userIds) }
   })
 }

@@ -11,12 +11,13 @@
     <grid
       ref="grid"
       :data="roleData"
-      :height="590"
+      :height="600"
       :total="total"
       filter-position="left"
       :bbar-column="false"
       :bbar-export="false"
       :bbar-export-all="false"
+      :loading="loading"
       @reload="loadRole"
       @selection-change="onSelectionChange"
     >
@@ -72,6 +73,8 @@ export default {
     return {
       visibleDialog: false,
 
+      loading: true,
+
       roleData: [],
       total: 0,
 
@@ -93,6 +96,7 @@ export default {
           this.roleData = res.data.list
           this.total = res.data.total
         }
+        this.loading = false
       })
     },
     formatter(row, column) {

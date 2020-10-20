@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-09-22 10:33:29
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-19 21:42:20
+ * @LastEditTime: 2020-10-20 15:02:50
  * @Description: 角色管理
  * @FilePath: /aolong-parrot/src/views/role/index.vue
 -->
@@ -54,7 +54,21 @@
           { text: '系统角色', value: 0 }
         ]"
       ></column>
-      <column prop="userCount" label="用户数量"></column>
+      <ColumnTemplate prop="userCount" filter-bar label="用户数量">
+        <template slot-scope="scope">
+          <el-link
+            type="primary"
+            @click="
+              () => {
+                currentRole = scope.row
+                dialogUserDialog = true
+              }
+            "
+          >
+            {{ scope.row['userCount'] }}
+          </el-link>
+        </template>
+      </ColumnTemplate>
       <ColumnTemplate label="修改">
         <template slot-scope="scope">
           <el-button
@@ -77,6 +91,15 @@
     <el-dialog :visible.sync="dialogRoleForm" :title="roleFormTitle" width="30%" :close-on-click-modal="false">
       <RoleForm :data="currentRole" @close="dialogRoleForm = false" @success="onSaveSuccess"></RoleForm>
     </el-dialog>
+    <UserDialog
+      :visible="dialogUserDialog"
+      :data="currentRole"
+      @close="dialogUserDialog = false"
+      @update="onUpdateUserCount"
+    ></UserDialog>
+    <!-- <el-dialog top="5vh" width="70%" :visible.sync="dialogUserGrid" :title="userGridTitle">
+      <UserGrid :data="currentRole" @close="dialogUserGrid = false"></UserGrid>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -88,11 +111,12 @@ import { MessageBox } from 'element-ui'
 import { getAppHeight } from '@/utils'
 import { findAll } from '@/api/role'
 import RoleForm from './RoleForm'
+import UserDialog from './UserDialog'
 import { remove } from '@/api/role'
 
 export default {
   name: 'Role',
-  components: { Grid, Column, ColumnTemplate, RoleForm },
+  components: { Grid, Column, ColumnTemplate, RoleForm, UserDialog },
   mixins: [guide, mixin],
   data() {
     return {
@@ -102,7 +126,9 @@ export default {
 
       currentRole: {}, //当前角色
       dialogRoleForm: false, //显示角色编辑窗口
-      roleFormTitle: ''
+      roleFormTitle: '',
+
+      dialogUserDialog: false //显示用户Dialog
     }
   },
   computed: {
@@ -134,17 +160,21 @@ export default {
       }
     },
     onDeleteRoles() {
-      const ids = this.getIds()
+      const { ids, userRoleIds, existsSysRole } = this.getIds()
       if (ids.length === 0) {
         return
       }
-      MessageBox.confirm('确定要删除吗?', '提示', {
+      let msg = '确定要删除吗?'
+      if (existsSysRole) {
+        msg = '您勾选的数据中存在[系统角色], 执行操作时[系统角色]不会被删除, 确定继续删除其他[用户角色]吗?'
+      }
+      MessageBox.confirm(msg, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          remove(ids).then(res => {
+          remove(userRoleIds).then(res => {
             if (res.success) {
               this.loadRole(this.$refs.grid.currentParams)
             }
@@ -163,7 +193,11 @@ export default {
         if (row.roleStatus === 1) {
           return '正常'
         } else {
-          return '禁用'
+          return (
+            <el-tag size="mini" type="info" effect="dark">
+              禁用
+            </el-tag>
+          )
         }
       } else {
         return row[column.property]
@@ -171,11 +205,23 @@ export default {
     },
     getIds() {
       const rows = this.$refs.grid.$table.selection
-      let checkIds = []
+      let ids = []
+      let userRoleIds = []
+      let existsSysRole = false
       for (let i = 0; i < rows.length; i++) {
-        checkIds.push(rows[i].roleId)
+        ids.push(rows[i].roleId)
+        if (rows[i].roleType === 0) {
+          existsSysRole = true
+        } else {
+          userRoleIds.push(rows[i].roleId)
+        }
       }
-      return checkIds
+      return { ids, userRoleIds, existsSysRole }
+    },
+    onUpdateUserCount(total) {
+      const { index } = this.$refs.grid.getRow('roleId', this.currentRole.roleId)
+      Object.assign(this.currentRole, { userCount: total })
+      this.$refs.grid.updateRow(index, this.currentRole)
     }
   }
 }
