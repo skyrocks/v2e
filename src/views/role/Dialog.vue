@@ -22,7 +22,6 @@
       @selection-change="onSelectionChange"
     >
       <column type="selection"></column>
-      <column prop="roleCode" label="角色编号"></column>
       <column prop="roleName" label="角色名称"></column>
       <column
         prop="roleStatus"
@@ -103,14 +102,18 @@ export default {
       if (column.property === 'roleType') {
         if (row.roleType === 0) {
           return '系统角色'
-        } else if (row.userStatus === 1) {
+        } else if (row.roleType === 1) {
           return '用户角色'
         }
       } else if (column.property === 'roleStatus') {
         if (row.roleStatus === 1) {
           return '正常'
         } else {
-          return '禁用'
+          return (
+            <el-tag size="mini" type="info" effect="dark">
+              禁用
+            </el-tag>
+          )
         }
       } else {
         return row[column.property]

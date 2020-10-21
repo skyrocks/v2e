@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-08-17 09:45:42
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-16 17:07:08
+ * @LastEditTime: 2020-10-20 15:13:21
  * @Description: 构建动态路由
  * @FilePath: /aolong-parrot/src/router/menu.js
  */
@@ -48,12 +48,14 @@ const createMenuTree = data => {
       if (ele.children.length == 0) {
         menus.push({
           path: `/${ele.menuCode}`,
+          hidden: ele.hiddenRoute === 1,
           component: Layout,
           children: [
             {
               path: ele.menuCode,
               name: ele.menuId,
               component: () => Promise.resolve(require(`@/views/${ele.route}/index`).default),
+              hidden: ele.hiddenRoute === 1,
               meta: { title: ele.menuName, icon: ele.iconClass, funcKeys: ele.funcKeys }
             }
           ]
@@ -63,6 +65,7 @@ const createMenuTree = data => {
           path: `/${ele.menuCode}`,
           component: Layout,
           name: ele.menuId,
+          hidden: ele.hiddenRoute === 1,
           meta: { title: ele.menuName, icon: ele.iconClass },
           children: createSubMenu(ele.children)
         })
@@ -90,6 +93,7 @@ const createSubMenu = data => {
         这个坑很大
         */
         // resolve => require([`@/views/${ele.route}/index`], resolve),
+        hidden: ele.hiddenRoute === 1,
         meta: { title: ele.menuName, funcKeys: ele.funcKeys }
       })
     } else {
@@ -97,6 +101,7 @@ const createSubMenu = data => {
       menus.push({
         path: ele.menuCode,
         name: ele.menuId,
+        hidden: ele.hiddenRoute === 1,
         meta: { title: ele.menuName },
         children: createSubMenu(ele.children)
       })

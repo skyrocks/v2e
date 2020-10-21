@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-10-20 12:18:08
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-20 13:18:39
+ * @LastEditTime: 2020-10-20 15:27:49
  * @Description: 角色用户添加Gird
  * @FilePath: /aolong-parrot/src/views/role/UserAllGrid.vue
 -->
@@ -75,7 +75,7 @@ import { Grid, Column, ColumnTemplate } from '@/components/Grid'
 import { findAll, browserPhoto } from '@/api/user'
 
 export default {
-  name: 'RoleUserGrid',
+  name: 'RoleUserAllGrid',
   components: { Grid, Column, ColumnTemplate },
   data() {
     return {
