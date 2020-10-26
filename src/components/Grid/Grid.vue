@@ -73,7 +73,7 @@
         v-if="pagination"
         class="item left grid-pagination"
         :current-page.sync="currentPage"
-        :page-sizes="[25, 50, 100, 200, 300, 500, 1000]"
+        :page-sizes="[15, 30, 50, 100, 200, 300, 500, 1000]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -233,6 +233,9 @@ export default {
     this.$table = this.$refs.grid
     this.extractColumnProp()
     this.bodyHeightStyle = this.$refs.grid.$el.querySelector('.el-table__body-wrapper').style // 'height: 632px;'
+  },
+  activated() {
+    this.$refs.grid.doLayout()
   },
   methods: {
     extractColumnProp() {

@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-08-17 09:45:42
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-20 15:13:21
+ * @LastEditTime: 2020-10-26 08:31:02
  * @Description: 构建动态路由
  * @FilePath: /aolong-parrot/src/router/menu.js
  */
@@ -47,25 +47,25 @@ const createMenuTree = data => {
     if (ele.parentId === '') {
       if (ele.children.length == 0) {
         menus.push({
-          path: `/${ele.menuCode}`,
-          hidden: ele.hiddenRoute === 1,
+          path: `/${ele.path}`,
+          hidden: ele.hidden === 1,
           component: Layout,
           children: [
             {
-              path: ele.menuCode,
-              name: ele.menuId,
-              component: () => Promise.resolve(require(`@/views/${ele.route}/index`).default),
-              hidden: ele.hiddenRoute === 1,
+              path: ele.path,
+              name: getRoueName(ele.component),
+              component: () => Promise.resolve(require(`@/views/${ele.component}`).default),
+              hidden: ele.hidden === 1,
               meta: { title: ele.menuName, icon: ele.iconClass, funcKeys: ele.funcKeys }
             }
           ]
         })
       } else {
+        //非末级
         menus.push({
-          path: `/${ele.menuCode}`,
+          path: `/${ele.path}`,
           component: Layout,
-          name: ele.menuId,
-          hidden: ele.hiddenRoute === 1,
+          hidden: ele.hidden === 1,
           meta: { title: ele.menuName, icon: ele.iconClass },
           children: createSubMenu(ele.children)
         })
@@ -81,33 +81,41 @@ const createSubMenu = data => {
     if (ele.children.length === 0) {
       // 末级
       menus.push({
-        path: ele.menuCode,
-        name: ele.menuId,
-        component: () => Promise.resolve(require(`@/views/${ele.route}/index`).default),
+        path: ele.path,
+        name: getRoueName(ele.component),
+        component: () => Promise.resolve(require(`@/views/${ele.component}`).default),
         /*
-        component: () => resolve => require([`@/views/${ele.route}/index`], resolve),
-        component: () => import('@/views/${ele.route}/index')
+        component: () => resolve => require([`@/views/${ele.component}`], resolve),
+        component: () => import('@/views/${ele.component}')
         以上两种写法都会有问题, 编译的时候就会出现警告
         Critical dependency: the request of a dependency is an expression
         然后在路由请求的时候根本加载不出来,日志也不会报出什么错误
         这个坑很大
         */
-        // resolve => require([`@/views/${ele.route}/index`], resolve),
-        hidden: ele.hiddenRoute === 1,
+        // resolve => require([`@/views/${ele.component}`], resolve),
+        hidden: ele.hidden === 1,
         meta: { title: ele.menuName, funcKeys: ele.funcKeys }
       })
     } else {
       // 非末级
       menus.push({
-        path: ele.menuCode,
-        name: ele.menuId,
-        hidden: ele.hiddenRoute === 1,
+        path: ele.path,
+        hidden: ele.hidden === 1,
         meta: { title: ele.menuName },
         children: createSubMenu(ele.children)
       })
     }
   })
   return menus
+}
+
+const getRoueName = component => {
+  let arr = component.split('/')
+  let name = ''
+  arr.map(value => {
+    name = `${name}${value.substring(0, 1).toUpperCase()}${value.substring(1)}`
+  })
+  return name
 }
 
 export { createDynamicRouter }

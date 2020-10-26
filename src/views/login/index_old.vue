@@ -92,7 +92,7 @@
 
 <script>
 import uuidv1 from 'uuid/v1'
-import { sendCode } from '@/api/auth'
+import { sendSmsCode } from '@/api/auth'
 
 export default {
   name: 'Login',
@@ -193,7 +193,7 @@ export default {
     sendCode() {
       this.inputSMSId = uuidv1()
       const data = { id: this.inputSMSId, cellphone: this.inputCellphone }
-      sendCode(data).then(response => {
+      sendSmsCode(data).then(response => {
         console.log(response.data)
       })
     },
