@@ -3,10 +3,10 @@
     <grid ref="grid" :data="userData" :total="total" :loading="loading" @reload="loadUser">
       <template slot="tbar">
         <el-button-group>
-          <default-button class="enable" has="Enable" el-icon="unlock" @click="() => updateStatus(1)">
+          <default-button class="enable" has="Enable" el-icon="unlock" @click="() => enableStatus(1)">
             激活
           </default-button>
-          <default-button class="disable" has="Disable" el-icon="lock" @click="() => updateStatus(0)">
+          <default-button class="disable" has="Disable" el-icon="lock" @click="() => disableStatus(0)">
             禁用
           </default-button>
           <default-button
@@ -82,7 +82,7 @@
       <column prop="expiryDate" label="有效期"></column>
       <column prop="cellphone" label="手机号码"></column>
       <column prop="email" label="邮箱地址"></column>
-      <ColumnTemplate label="头像">
+      <ColumnTemplate label="头像" class-name="photo">
         <template slot-scope="scope">
           <el-popover v-if="scope.row.existsPhoto" trigger="hover" placement="left">
             <el-image
@@ -90,7 +90,7 @@
               :src="`${photoUrls[scope.row.userId]}`"
               fit="cover"
             ></el-image>
-            <div style="text-align:center;margin-top:5px;">
+            <div v-if="$has('EditPhoto')" style="text-align:center;margin-top:5px;">
               <el-upload
                 :action="`${uploadPhotoAction}${scope.row.userId}`"
                 :headers="headers"
@@ -111,7 +111,7 @@
             </div>
           </el-popover>
           <el-upload
-            v-if="!scope.row.existsPhoto"
+            v-if="!scope.row.existsPhoto && $has('EditPhoto')"
             :action="`${uploadPhotoAction}${scope.row.userId}`"
             :headers="headers"
             :show-file-list="false"
@@ -125,7 +125,7 @@
           </el-upload>
         </template>
       </ColumnTemplate>
-      <ColumnTemplate label="角色">
+      <ColumnTemplate label="角色" class-name="role">
         <template slot-scope="scope">
           <el-popover v-if="scope.row.roles.length > 0" trigger="hover" placement="left">
             <div class="role-tag-wrap">
@@ -133,14 +133,14 @@
                 v-for="(r, i) in scope.row.roles"
                 :key="i"
                 class="role-tag"
-                closable
+                :closable="$has('EditRole')"
                 :disable-transitions="true"
                 @close="onRemoveRole(scope.row, r.roleId, i)"
               >
                 {{ r.roleName }}
               </el-tag>
             </div>
-            <div class="role-tag">
+            <div v-if="$has('EditRole')" class="role-tag">
               <el-button
                 size="mini"
                 @click="
@@ -159,7 +159,7 @@
             </div>
           </el-popover>
           <el-button
-            v-if="scope.row.roles.length === 0"
+            v-if="scope.row.roles.length === 0 && $has('EditRole')"
             type="primary"
             plain
             size="mini"
@@ -174,7 +174,7 @@
           </el-button>
         </template>
       </ColumnTemplate>
-      <ColumnTemplate label="修改">
+      <ColumnTemplate has="Edit" label="修改" class-name="edit">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -319,15 +319,25 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        remove(this.getUserIds()).then(res => {
-          if (res.success) {
-            this.loadUser(this.$refs.grid.currentParams)
-          }
-        })
+      }).then(this.requestRemove)
+    },
+    @__log('删除虚拟账号')
+    requestRemove() {
+      remove(this.getUserIds()).then(res => {
+        if (res.success) {
+          this.loadUser(this.$refs.grid.currentParams)
+        }
       })
     },
-    updateStatus(status) {
+    @__log('激活')
+    enableStatus(status) {
+      this.modifyStatus(status)
+    },
+    @__log('禁用')
+    disableStatus(status) {
+      this.modifyStatus(status)
+    },
+    modifyStatus(status) {
       const ids = this.getUserIds()
       if (ids.length === 0) {
         return
@@ -346,6 +356,7 @@ export default {
         }
       })
     },
+    @__log('添加角色')
     onAddRole(roles) {
       this.dialogRole = false
       const roleIds = []
@@ -360,6 +371,7 @@ export default {
         }
       })
     },
+    @__log('删除角色')
     onRemoveRole(row, roleId, index) {
       removeRole(row.userId, roleId).then(res => {
         if (res.success) {
@@ -392,6 +404,7 @@ export default {
         this.$refs.grid.updateRow(index, rowClone)
       }
     },
+    @__log('上传头像')
     onSuccessUpPhoto(res, file, fileList, userId) {
       this.photoUrls[userId] = URL.createObjectURL(file.raw)
       const { index, row } = this.$refs.grid.getRow('userId', userId)

@@ -187,20 +187,25 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.formData.roles = this.roles
-          create(this.formData).then(res => {
-            if (res.success) {
-              this.resetForm()
-              this.$emit('success', '')
-              this.$message.success('新账号已经创建成功')
-            } else {
-              this.$message.error(res.message)
-            }
-          })
+          this.requestCreate()
         } else {
           return false
         }
       })
     },
+    @__log('添加虚拟账号')
+    requestCreate() {
+      create(this.formData).then(res => {
+        if (res.success) {
+          this.resetForm()
+          this.$emit('success', '')
+          this.$message.success('新账号已经创建成功')
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    @__log('修改')
     onSave() {
       update(this.formData).then(res => {
         if (res.success) {

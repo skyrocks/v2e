@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-09-25 11:29:07
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-15 15:15:59
+ * @LastEditTime: 2021-01-05 16:49:28
  * @Description: 这是一个什么文件...
  * @FilePath: /aolong-parrot/src/views/user/ExpiryForm.vue
 -->
@@ -53,17 +53,21 @@ export default {
     onSave() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          updateExpiry(this.$parent.$parent.getUserIds(), this.formData.date).then(res => {
-            if (res.success) {
-              this.$emit('success', this.formData.date)
-              this.resetForm()
-              this.$message.success('有效期已经修改成功')
-            } else {
-              this.$message.error(res.message)
-            }
-          })
+          this.requestSave()
         } else {
           return false
+        }
+      })
+    },
+    @__log('修改有效期')
+    requestSave() {
+      updateExpiry(this.$parent.$parent.getUserIds(), this.formData.date).then(res => {
+        if (res.success) {
+          this.$emit('success', this.formData.date)
+          this.resetForm()
+          this.$message.success('有效期已经修改成功')
+        } else {
+          this.$message.error(res.message)
         }
       })
     },

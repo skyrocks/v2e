@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-09-22 10:33:29
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-20 15:02:50
+ * @LastEditTime: 2020-10-26 16:23:19
  * @Description: 角色管理
  * @FilePath: /aolong-parrot/src/views/role/index.vue
 -->
@@ -54,7 +54,7 @@
           { text: '系统角色', value: 0 }
         ]"
       ></column>
-      <ColumnTemplate prop="userCount" filter-bar label="用户数量">
+      <ColumnTemplate prop="userCount" filter-bar label="用户数量" class-name="userCount">
         <template slot-scope="scope">
           <el-link
             type="primary"
@@ -69,7 +69,7 @@
           </el-link>
         </template>
       </ColumnTemplate>
-      <ColumnTemplate label="修改">
+      <ColumnTemplate label="修改" class-name="edit">
         <template slot-scope="scope">
           <el-button
             size="mini"

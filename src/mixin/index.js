@@ -1,3 +1,11 @@
+/*
+ * @Author: shilei
+ * @Date: 2020-09-28 15:12:09
+ * @LastEditors: shilei
+ * @LastEditTime: 2020-10-26 16:36:06
+ * @Description: 全局业务组件混入
+ * @FilePath: /aolong-parrot/src/mixin/index.js
+ */
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
 import { create } from '@/api/log'
@@ -12,6 +20,10 @@ const mixin = {
     if (this.steps) {
       let guideFlag = store.get(window.__C.K_GUIDE)
       if (guideFlag === undefined || guideFlag === '' || !guideFlag[this.$route.path]) {
+        // 执行一次, 记录标记
+        if (guideFlag === undefined || guideFlag === '') {
+          guideFlag = {}
+        }
         this.$nextTick(function() {
           const driver = new Driver({
             doneBtnText: '完成', // 结束按钮的文字
@@ -20,16 +32,13 @@ const mixin = {
             prevBtnText: '上一步', // 上一步按钮的文字
             closeBtnText: '关闭' // 关闭按钮的文字
           })
-          if (this.gridSteps) {
+          if (this.gridSteps && guideFlag.grid !== true) {
             this.steps = this.steps.concat(this.gridSteps)
+            guideFlag.grid = true
           }
           driver.defineSteps(this.steps)
           driver.start()
 
-          // 执行一次, 记录标记
-          if (guideFlag === undefined || guideFlag === '') {
-            guideFlag = {}
-          }
           guideFlag[this.$route.path] = true
           store.set(window.__C.K_GUIDE, guideFlag)
         })

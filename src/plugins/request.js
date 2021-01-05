@@ -1,4 +1,4 @@
-import _this from '@/main'
+import main from '@/main'
 import axios from 'axios'
 // import Qs from 'qs'
 import { MessageBox, Message } from 'element-ui'
@@ -71,9 +71,9 @@ service.interceptors.response.use(
           return againRequest(response)
         } else {
           if (res.code === 401) {
-            console.log(_this.$route)
+            //console.log(_this.$route)
             // 401: 认证错误
-            if (_this.$route && _this.$route.path !== '/login' && _this.$route.path !== '/') {
+            if (main.$route && main.$route.path !== '/login' && main.$route.path !== '/') {
               MessageBox.confirm('您已经登录超时, 您可以选择重新登录或者留在当前页面', '退出', {
                 confirmButtonText: '重新登录',
                 cancelButtonText: '留在当前页面',

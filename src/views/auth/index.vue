@@ -2,7 +2,7 @@
  * @Author: shilei
  * @Date: 2020-10-20 15:27:14
  * @LastEditors: shilei
- * @LastEditTime: 2020-10-21 18:20:59
+ * @LastEditTime: 2020-10-26 16:47:26
  * @Description: 角色授权
  * @FilePath: /aolong-parrot/src/views/auth/index.vue
 -->
@@ -13,6 +13,7 @@
         <div class="border-r">
           <grid
             ref="grid"
+            class="role-grid"
             :data="roleData"
             :total="total"
             :highlight-current-row="true"
@@ -65,6 +66,7 @@
             ></el-tree> -->
             <Tree
               ref="tree"
+              class="menu-tree"
               :tree-data="treeData"
               :role-id="selectedRole.roleId"
               style="margin-left: 5px;"
@@ -78,6 +80,8 @@
 </template>
 
 <script>
+import { mixin } from '@/mixin'
+import { guide } from './guide'
 import splitPane from 'vue-splitpane'
 import { getAppHeight } from '@/utils'
 import { Grid, Column } from '@/components/Grid'
@@ -87,6 +91,7 @@ import Tree from './Tree'
 export default {
   name: 'Auth',
   components: { splitPane, Grid, Column, Tree },
+  mixins: [guide, mixin],
   data() {
     return {
       loading: true,

@@ -65,16 +65,20 @@ export default {
       }
       this.$refs.form.validate(valid => {
         if (valid) {
-          if (this.me) {
-            updateMyPwd(this.formData.oldPwd, this.formData.newPwd).then(this.callback)
-          } else {
-            const userIds = this.$parent.$parent.getUserIds()
-            updatePwd(userIds, this.formData.newPwd).then(this.callback)
-          }
+          this.requestSave()
         } else {
           return false
         }
       })
+    },
+    @__log('修改密码')
+    requestSave() {
+      if (this.me) {
+        updateMyPwd(this.formData.oldPwd, this.formData.newPwd).then(this.callback)
+      } else {
+        const userIds = this.$parent.$parent.getUserIds()
+        updatePwd(userIds, this.formData.newPwd).then(this.callback)
+      }
     },
     callback(res) {
       if (res.success) {
