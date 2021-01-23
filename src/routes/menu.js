@@ -4,12 +4,12 @@
  * @LastEditors: shilei
  * @LastEditTime: 2020-10-26 08:31:02
  * @Description: 构建动态路由
- * @FilePath: /aolong-parrot/src/router/menu.js
+ * @FilePath: /aolong-parrot/src/routes/menu.js
  */
 import router from '.'
 import staticRoutes from './static'
 import Layout from '@/layout'
-import store from '@/store'
+import store from '@/stores'
 
 const createDynamicRouter = () => {
   const routes = []

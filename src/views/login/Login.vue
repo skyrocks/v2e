@@ -98,7 +98,7 @@
 </template>
 <script>
 import uuidv1 from 'uuid/v1'
-import { createDynamicRouter } from '@/router/menu'
+import { createDynamicRouter } from '@/routes/menu'
 import { sendSmsCode, loginError } from '@/api/auth'
 
 export default {

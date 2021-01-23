@@ -4,7 +4,7 @@
  * @LastEditors: shilei
  * @LastEditTime: 2020-10-15 16:16:12
  * @Description: 这是一个什么文件...
- * @FilePath: /aolong-parrot/src/store/modules/settings.js
+ * @FilePath: /aolong-parrot/src/stores/modules/settings.js
  */
 import defaultSettings from '@/settings'
 

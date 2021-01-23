@@ -1,10 +1,10 @@
-import Store from '@/utils/store'
+import cache from '@/utils/cache'
 
 const key = window.__C.K_SIDEBARSTATUS
 
 const state = {
   sidebar: {
-    opened: Store.get(key) ? !!+Store.get(key) : true,
+    opened: cache.get(key) ? !!+cache.get(key) : true,
     withoutAnimation: false
   },
   device: 'desktop'
@@ -15,13 +15,13 @@ const mutations = {
     state.sidebar.opened = !state.sidebar.opened
     state.sidebar.withoutAnimation = false
     if (state.sidebar.opened) {
-      Store.set(key, 1)
+      cache.set(key, 1)
     } else {
-      Store.set(key, 0)
+      cache.set(key, 0)
     }
   },
   CLOSE_SIDEBAR: (state, withoutAnimation) => {
-    Store.set(key, 0)
+    cache.set(key, 0)
     state.sidebar.opened = false
     state.sidebar.withoutAnimation = withoutAnimation
   },

@@ -6,7 +6,7 @@
  * @Description: Api-Role
  * @FilePath: /aolong-parrot/src/api/role.js
  */
-import request from '@/plugins/request'
+import request from '@/utils/request'
 
 /**
  * 查询角色

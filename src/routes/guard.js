@@ -1,10 +1,10 @@
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
 import router from '.'
-import store from '../store'
+import store from '../stores'
 import getPageTitle from '@/utils/title'
 import { getToken, fixToken } from '@/utils/token'
-import { createDynamicRouter } from '@/router/menu'
+import { createDynamicRouter } from '@/routes/menu'
 
 NProgress.configure({ showSpinner: false })
 

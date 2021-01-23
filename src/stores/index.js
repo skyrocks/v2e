@@ -4,7 +4,7 @@
  * @LastEditors: shilei
  * @LastEditTime: 2020-10-15 15:50:18
  * @Description: 这是一个什么文件...
- * @FilePath: /aolong-parrot/src/store/index.js
+ * @FilePath: /aolong-parrot/src/stores/index.js
  */
 import Vue from 'vue'
 import Vuex from 'vuex'

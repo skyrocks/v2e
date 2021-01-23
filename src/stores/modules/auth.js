@@ -1,6 +1,6 @@
 import { login, loginSms, refreshToken, profile } from '@/api/auth'
 import { getToken, setToken, removeToken } from '@/utils/token'
-import { resetRouter } from '@/router'
+import { resetRouter } from '@/routes'
 
 const getDefaultState = () => {
   return {

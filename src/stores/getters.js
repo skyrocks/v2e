@@ -4,7 +4,7 @@
  * @LastEditors: shilei
  * @LastEditTime: 2020-10-15 16:59:56
  * @Description: 这是一个什么文件...
- * @FilePath: /aolong-parrot/src/store/getters.js
+ * @FilePath: /aolong-parrot/src/stores/getters.js
  */
 const getters = {
   sidebar: state => state.app.sidebar,

@@ -1,4 +1,4 @@
-import request from '@/plugins/request'
+import request from '@/utils/request'
 
 /**
  * 获取登录用户的所有权限的菜单列表

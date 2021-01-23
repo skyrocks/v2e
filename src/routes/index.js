@@ -9,7 +9,7 @@ Vue.use(Router)
 const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login'),
     hidden: true
   },
   {

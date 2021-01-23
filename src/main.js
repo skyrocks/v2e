@@ -17,17 +17,17 @@ import '@/styles/variables.scss'
 import '@/styles/index.scss'
 
 import '@/utils/const'
-import '@/router/guard'
-import '@/decorator/log'
+import '@/routes/guard'
+import '@/decorators/log'
 import '@/components/SvgIcon'
 import '@/components/Button'
-import xss from '@/plugins/xss'
+import xss from '@/utils/xss'
 
 import has from '@/directives/auth'
 import waves from '@/directives/waves'
 
-import store from './store'
-import router from './router'
+import store from './stores'
+import router from './routes'
 import App from './App'
 
 Vue.use(ElementUI)

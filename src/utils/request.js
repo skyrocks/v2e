@@ -2,7 +2,7 @@ import main from '@/main'
 import axios from 'axios'
 // import Qs from 'qs'
 import { MessageBox, Message } from 'element-ui'
-import store from '@/store'
+import store from '@/stores'
 import { getToken } from '@/utils/token'
 
 const againRequest = async response => {

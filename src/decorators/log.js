@@ -4,7 +4,7 @@
  * @LastEditors: shilei
  * @LastEditTime: 2020-10-27 15:44:05
  * @Description: 这是一个什么文件...
- * @FilePath: /aolong-parrot/src/decorator/log.js
+ * @FilePath: /aolong-parrot/src/decorators/log.js
  */
 import '.'
 import main from '@/main'

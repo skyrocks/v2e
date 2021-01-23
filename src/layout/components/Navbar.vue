@@ -51,7 +51,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import request from '@/plugins/request'
+import request from '@/utils/request'
 import { logout } from '@/api/auth'
 
 export default {

@@ -9,7 +9,7 @@
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
 import { create } from '@/api/log'
-import store from '@/utils/store'
+import cache from '@/utils/cache'
 
 const mixin = {
   mounted() {
@@ -18,7 +18,7 @@ const mixin = {
 
     // 页面引导
     if (this.steps) {
-      let guideFlag = store.get(window.__C.K_GUIDE)
+      let guideFlag = cache.get(window.__C.K_GUIDE)
       if (guideFlag === undefined || guideFlag === '' || !guideFlag[this.$route.path]) {
         // 执行一次, 记录标记
         if (guideFlag === undefined || guideFlag === '') {
@@ -40,7 +40,7 @@ const mixin = {
           driver.start()
 
           guideFlag[this.$route.path] = true
-          store.set(window.__C.K_GUIDE, guideFlag)
+          cache.set(window.__C.K_GUIDE, guideFlag)
         })
       }
     }

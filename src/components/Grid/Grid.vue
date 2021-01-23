@@ -115,7 +115,7 @@
 </template>
 <script>
 import { getAppHeight, getStringLength } from '@/utils'
-import { export2Excel } from '@/vendor'
+import { export2Excel } from '@/utils/excel'
 export default {
   name: 'Grid',
   props: {
