@@ -29,7 +29,7 @@ module.exports = {
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
-    'no-console': 'off',
+    'no-console': 'warn',
     "vue/no-v-html": "off",
     'vue/require-default-prop': 0, // 不检查默认属性
     'vue/require-prop-types': 0 // 不检查默认类型

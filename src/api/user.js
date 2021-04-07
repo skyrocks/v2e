@@ -14,7 +14,7 @@ import { Message } from 'element-ui'
  */
 export function findAll(params, filter, sort, pageNum, pageSize = window.__C.P_PAGESIZE) {
   return request({
-    url: `/api/users/${pageNum}/${pageSize}`,
+    url: `/users/${pageNum}/${pageSize}`,
     method: 'get',
     params: { filter, sort, params }
   })
@@ -29,7 +29,7 @@ export function findAll(params, filter, sort, pageNum, pageSize = window.__C.P_P
  */
 export function create(data) {
   return request({
-    url: '/api/users',
+    url: '/users',
     method: 'post',
     data
   })
@@ -44,7 +44,7 @@ export function create(data) {
  */
 export function update(data) {
   return request({
-    url: '/api/users/update',
+    url: '/users/update',
     method: 'post',
     data
   })
@@ -59,7 +59,7 @@ export function update(data) {
  */
 export function remove(userIds) {
   return request({
-    url: '/api/users/delete',
+    url: '/users/delete',
     method: 'post',
     data: userIds
   })
@@ -75,7 +75,7 @@ export function remove(userIds) {
  */
 export function updateStatus(userIds, status) {
   return request({
-    url: '/api/users/update/status',
+    url: '/users/update/status',
     method: 'post',
     data: { userIds: encodeURIComponent(userIds), status }
   })
@@ -91,7 +91,7 @@ export function updateStatus(userIds, status) {
  */
 export function updatePwd(userIds, pwd) {
   return request({
-    url: '/api/users/update/pwd',
+    url: '/users/update/pwd',
     method: 'post',
     data: { userIds: encodeURIComponent(userIds), pwd }
   })
@@ -99,7 +99,7 @@ export function updatePwd(userIds, pwd) {
 
 export function updateMyPwd(oldPwd, pwd) {
   return request({
-    url: '/api/users/update/my-pwd',
+    url: '/users/update/my-pwd',
     method: 'post',
     data: { oldPwd, pwd }
   })
@@ -115,7 +115,7 @@ export function updateMyPwd(oldPwd, pwd) {
  */
 export function updateExpiry(userIds, expiry) {
   return request({
-    url: '/api/users/update/expiry',
+    url: '/users/update/expiry',
     method: 'post',
     data: { userIds: encodeURIComponent(userIds), expiry }
   })
@@ -131,7 +131,7 @@ export function updateExpiry(userIds, expiry) {
  */
 export function addRoles(userId, roleIds) {
   return request({
-    url: `/api/users/create/roles/${userId}`,
+    url: `/users/create/roles/${userId}`,
     method: 'post',
     data: { roleIds: encodeURIComponent(roleIds) }
   })
@@ -147,7 +147,7 @@ export function addRoles(userId, roleIds) {
  */
 export function removeRole(userId, roleId) {
   return request({
-    url: `/api/users/delete/role/${roleId}/${userId}`,
+    url: `/users/delete/role/${roleId}/${userId}`,
     method: 'post'
   })
 }
@@ -162,7 +162,7 @@ export function removeRole(userId, roleId) {
  */
 export function validate(field, value, excludeUserId = '') {
   return request({
-    url: `/api/users/validate/${field}/${value}`,
+    url: `/users/validate/${field}/${value}`,
     method: 'get',
     params: { excludeUserId }
   })
@@ -170,7 +170,7 @@ export function validate(field, value, excludeUserId = '') {
 
 export function browserPhoto(userId) {
   return request({
-    url: `/api/users/photo/${userId}`,
+    url: `/users/photo/${userId}`,
     responseType: 'blob',
     method: 'get'
   })
@@ -179,7 +179,7 @@ export function browserPhoto(userId) {
 export function download(data) {
   return new Promise((resolve, reject) => {
     request({
-      url: '/api/users/download',
+      url: '/users/download',
       responseType: 'blob',
       method: 'post',
       data
@@ -207,7 +207,7 @@ export function download(data) {
 
 export function testGet(params) {
   return request({
-    url: '/api/users/test',
+    url: '/users/test',
     method: 'get',
     params
   })
@@ -215,7 +215,7 @@ export function testGet(params) {
 
 export function testPost(data) {
   return request({
-    url: '/api/users/test',
+    url: '/users/test',
     method: 'post',
     data
   })

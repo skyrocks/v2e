@@ -21,7 +21,7 @@ import request from '@/utils/request'
  */
 export function findAll(params, filter, sort, pageNum, pageSize = window.__C.P_PAGESIZE) {
   return request({
-    url: `/api/roles/${pageNum}/${pageSize}`,
+    url: `/roles/${pageNum}/${pageSize}`,
     method: 'get',
     params: { filter, sort, params }
   })
@@ -40,7 +40,7 @@ export function findAll(params, filter, sort, pageNum, pageSize = window.__C.P_P
  */
 export function findUsers(roleId, filter, sort, pageNum, pageSize = window.__C.P_PAGESIZE) {
   return request({
-    url: `/api/roles/users/${roleId}/${pageNum}/${pageSize}`,
+    url: `/roles/users/${roleId}/${pageNum}/${pageSize}`,
     method: 'get',
     params: { filter, sort }
   })
@@ -55,7 +55,7 @@ export function findUsers(roleId, filter, sort, pageNum, pageSize = window.__C.P
  */
 export function create(data) {
   return request({
-    url: '/api/roles',
+    url: '/roles',
     method: 'post',
     data
   })
@@ -70,7 +70,7 @@ export function create(data) {
  */
 export function update(data) {
   return request({
-    url: '/api/roles/update',
+    url: '/roles/update',
     method: 'post',
     data
   })
@@ -85,7 +85,7 @@ export function update(data) {
  */
 export function remove(roleIds) {
   return request({
-    url: '/api/roles/delete',
+    url: '/roles/delete',
     method: 'post',
     data: roleIds
   })
@@ -101,7 +101,7 @@ export function remove(roleIds) {
  */
 export function removeUsers(roleId, userIds) {
   return request({
-    url: '/api/roles/delete/users',
+    url: '/roles/delete/users',
     method: 'post',
     data: { roleId, userIds: encodeURIComponent(userIds) }
   })
@@ -117,7 +117,7 @@ export function removeUsers(roleId, userIds) {
  */
 export function addUsers(roleId, userIds) {
   return request({
-    url: '/api/roles/create/users',
+    url: '/roles/create/users',
     method: 'post',
     data: { roleId, userIds: encodeURIComponent(userIds) }
   })

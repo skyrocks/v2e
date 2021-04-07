@@ -53,7 +53,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    console.log(error)
+    // console.log(error)
     return Promise.reject(error)
   }
 )
@@ -92,7 +92,7 @@ service.interceptors.response.use(
             })
           } else {
             // 900: 不可预知, // 403 禁止访问
-            console.log(res)
+            // console.log(res)
           }
           return Promise.reject(res)
         }
@@ -102,7 +102,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error)
+    // console.log(error)
     Message({
       message: '数据请求异常',
       type: 'error',

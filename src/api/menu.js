@@ -8,7 +8,7 @@ import request from '@/utils/request'
  */
 export function findAuthMenu() {
   return request({
-    url: '/api/menus/current',
+    url: '/menus/current',
     method: 'get'
   })
 }
@@ -21,7 +21,7 @@ export function findAuthMenu() {
  */
 export function findMenus() {
   return request({
-    url: '/api/menus',
+    url: '/menus',
     method: 'get'
   })
 }
@@ -36,7 +36,7 @@ export function findMenus() {
  */
 export function authMenus(roleId, trueNodeIds, trueFuncKeys, falseNodeIds, falseFuncKeys) {
   return request({
-    url: '/api/menus/auth',
+    url: '/menus/auth',
     method: 'post',
     data: {
       roleId,
@@ -57,7 +57,7 @@ export function authMenus(roleId, trueNodeIds, trueFuncKeys, falseNodeIds, false
  */
 export function findRoleAuthMenu(roleId) {
   return request({
-    url: `/api/menus/auth/${roleId}`,
+    url: `/menus/auth/${roleId}`,
     method: 'get'
   })
 }

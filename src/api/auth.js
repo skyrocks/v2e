@@ -9,7 +9,7 @@ import request from '@/utils/request'
  */
 export function login(data) {
   return request({
-    url: '/api/auth/login',
+    url: '/auth/login',
     method: 'post',
     data
   })
@@ -24,7 +24,7 @@ export function login(data) {
  */
 export function refreshToken(data) {
   return request({
-    url: '/api/auth/refresh-token',
+    url: '/auth/refresh-token',
     method: 'post',
     data
   })
@@ -51,7 +51,7 @@ export function getCasToken(jSessionId) {
  */
 export function profile() {
   return request({
-    url: '/api/auth/profile',
+    url: '/auth/profile',
     method: 'get'
   })
 }
@@ -64,7 +64,7 @@ export function profile() {
  */
 export function loginError() {
   return request({
-    url: '/api/auth/login/error',
+    url: '/auth/login/error',
     method: 'get'
   })
 }
@@ -77,7 +77,7 @@ export function loginError() {
  */
 export function logout(loginName) {
   return request({
-    url: `/api/auth/logout/${loginName}`,
+    url: `/auth/logout/${loginName}`,
     method: 'post'
   })
 }
@@ -91,7 +91,7 @@ export function logout(loginName) {
  */
 export function sendSmsCode(data) {
   return request({
-    url: '/api/auth/sms/code',
+    url: '/auth/sms/code',
     method: 'post',
     data
   })
@@ -106,7 +106,7 @@ export function sendSmsCode(data) {
  */
 export function loginSms(data) {
   return request({
-    url: '/api/auth/sms/login',
+    url: '/auth/sms/login',
     method: 'post',
     data
   })

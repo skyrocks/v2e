@@ -149,7 +149,7 @@ export default {
     },
     onRefreshCaptcha() {
       this.form.pwd.captchaId = uuidv1()
-      this.captchaUrl = `${process.env.VUE_APP_BASE_API}/api/auth/captcha/${this.form.pwd.captchaId}`
+      this.captchaUrl = `${process.env.VUE_APP_BASE_API}/auth/captcha/${this.form.pwd.captchaId}`
     },
     onPwdLogin() {
       if (this.verifyPwdLogin()) {
