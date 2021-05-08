@@ -187,7 +187,7 @@ export default {
 
     refreshVerifyCode() {
       this.verifyCodeId = uuidv1()
-      this.verifyCodeUrl = `${process.env.VUE_APP_BASE_API}/api/auth/captcha/${this.verifyCodeId}`
+      this.verifyCodeUrl = `${process.env.VUE_APP_BASE_API}/auth/captcha/${this.verifyCodeId}`
     },
 
     sendCode() {

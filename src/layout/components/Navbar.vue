@@ -81,7 +81,7 @@ export default {
   methods: {
     getAvatar() {
       request({
-        url: `/api/users/photo/${this.$store.getters.userId}`,
+        url: `/users/photo/${this.$store.getters.userId}`,
         responseType: 'blob',
         method: 'get'
       }).then(res => {

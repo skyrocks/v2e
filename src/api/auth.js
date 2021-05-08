@@ -24,7 +24,7 @@ export function login(data) {
  */
 export function refreshToken(data) {
   return request({
-    url: '/auth/refresh-token',
+    url: '/auth/refresh/token',
     method: 'post',
     data
   })
@@ -77,8 +77,9 @@ export function loginError() {
  */
 export function logout(loginName) {
   return request({
-    url: `/auth/logout/${loginName}`,
-    method: 'post'
+    url: '/auth/logout',
+    method: 'post',
+    data: { loginName }
   })
 }
 

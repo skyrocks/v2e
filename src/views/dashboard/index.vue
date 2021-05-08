@@ -89,7 +89,7 @@ export default {
 
       testMenu: [],
       fileList: [],
-      uploadAction: `${process.env.VUE_APP_BASE_API}/api/users/upload`,
+      uploadAction: `${process.env.VUE_APP_BASE_API}/users/upload`,
       headers: { Authorization: `${getToken()}` }
     }
   },

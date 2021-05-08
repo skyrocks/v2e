@@ -83,7 +83,7 @@ service.interceptors.response.use(
                 location.reload()
               })
             }
-          } else if (res.code === 901 || res.code === 498) {
+          } else if (res.code === 590 || res.code === 498) {
             // 901: 业务错误, 498: 账号禁用类错误
             Message({
               message: res.message || 'Error',
@@ -91,7 +91,7 @@ service.interceptors.response.use(
               duration: 5 * 1000
             })
           } else {
-            // 900: 不可预知, // 403 禁止访问
+            // 599: 不可预知, // 403 禁止访问
             // console.log(res)
           }
           return Promise.reject(res)

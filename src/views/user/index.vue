@@ -287,7 +287,7 @@ export default {
       dialogRole: false, // 角色选择窗口标识
 
       photoUrls: {}, // 照片地址 userId:url
-      uploadPhotoAction: `${process.env.VUE_APP_BASE_API}/api/users/photo/`,
+      uploadPhotoAction: `${process.env.VUE_APP_BASE_API}/users/photo/`,
       headers: HeaderToken
     }
   },
